@@ -1,3 +1,4 @@
 (function (){
-   console.log("Chargement terminé"); 
+   console.log("Chargement terminé");
+   let socket = io();
 })();
