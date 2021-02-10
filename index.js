@@ -14,8 +14,8 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", ()=> {
         console.log("Utilisateur deconnecté");
-    })
-})
+    });
+});
 
 http.listen(4200, () => {
     console.log("Serveur lancé sur le port 4200");
