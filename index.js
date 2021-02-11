@@ -35,6 +35,7 @@ io.on("connection", (socket) => {
         }
     });
 
+    // Annulation de la recherche
     socket.on("cancel", () => {
         if (waitingPlayer.id == socket.id) {
             console.log(waitingPlayer.pseudo + " (" + socket.id + ") annule sa recherche");

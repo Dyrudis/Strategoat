@@ -8,9 +8,9 @@ let foundDiv = document.getElementById("found");
 form.addEventListener("submit", event => {
     event.preventDefault();
     if (pseudoInput.value) {
-        socket.emit("search", pseudoInput.value);
         form.style.display = "none";
         cancelButton.style.display = "block";
+        socket.emit("search", pseudoInput.value);
     }
 });
 
@@ -21,15 +21,7 @@ cancelButton.addEventListener("click", event => {
 });
 
 socket.on("found", opponentName => {
-    console.log("test");
     cancelButton.style.display = "none";
-    document.querySelector("#found h3").innerHTML = "Adversaire : " + opponentName + " !";
     foundDiv.style.display = "block";
-});
-
-socket.on("found2", opponentName => {
-    console.log("test");
-    cancelButton.style.display = "none";
     document.querySelector("#found h3").innerHTML = "Adversaire : " + opponentName + " !";
-    foundDiv.style.display = "block";
 });
