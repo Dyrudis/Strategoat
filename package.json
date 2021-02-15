@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Dyrudis/strategoat.git"
+    "url": "git+https://github.com/Dyrudis/Strategoat.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Dyrudis/strategoat/issues"
+    "url": "https://github.com/Dyrudis/Strategoat/issues"
   },
-  "homepage": "https://github.com/Dyrudis/strategoat#readme",
+  "homepage": "https://github.com/Dyrudis/Strategoat#readme",
   "dependencies": {
     "express": "^4.17.1",
     "socket.io": "^3.1.0"

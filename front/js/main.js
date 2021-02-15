@@ -23,5 +23,5 @@ cancelButton.addEventListener("click", event => {
 socket.on("found", opponentName => {
     cancelButton.style.display = "none";
     foundDiv.style.display = "block";
-    document.querySelector("#found h3").innerHTML = "Adversaire : " + opponentName + " !";
+    document.querySelector("#found h3").innerHTML = `Adversaire : ${opponentName} !`;
 });
