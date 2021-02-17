@@ -3,6 +3,7 @@ const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const matchmaking = require("./back/modules/matchmaking.js");
+const stratego = require("./back/models/stratego.js");
 
 app.use(express.static(`${__dirname}/front/`));
 
