@@ -1,25 +1,30 @@
 let socket = io();
 
-let form = document.getElementById("searchForm");
-let pseudoInput = document.getElementById("pseudo");
+let searchButton = document.getElementById("search");
+let username = document.getElementById("username");
 let cancelButton = document.getElementById("cancel");
 let foundDiv = document.getElementById("found");
 
-form.addEventListener("submit", event => {
-    event.preventDefault();
-    if (pseudoInput.value) {
-        form.style.display = "none";
-        cancelButton.style.display = "block";
-        socket.emit("search", pseudoInput.value);
-    }
-});
+// Début de la recherche
+searchButton.addEventListener("click", event => {
+    searchButton.style.display = "none";
+    cancelButton.style.display = "block";
+    socket.emit("search", username.innerHTML);
+})
 
+// Arrêt de la recherche
 cancelButton.addEventListener("click", event => {
     cancelButton.style.display = "none";
-    form.style.display = "block";
-    socket.emit("cancel");
+    searchButton.style.display = "block";
+    socket.emit("cancel", username.innerHTML);
 });
 
+// Affichage du nom de l'utilisateur au chargmenent de la page
+socket.on("load", name => {
+    username.innerHTML = name;
+});
+
+// Partie trouvée
 socket.on("found", opponentName => {
     cancelButton.style.display = "none";
     foundDiv.style.display = "block";
