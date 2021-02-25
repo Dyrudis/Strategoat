@@ -18,7 +18,7 @@ class Pion {
                 this.value = 2;
                 break;
             case 5 : //Démineur
-                this.id = "Démineur";
+                this.id = "Demineur";
                 this.value = 3;
                 break;
             case 6 : //Sergeant
@@ -42,11 +42,11 @@ class Pion {
                 this.value = 8;
                 break;
             case 11 : //Général
-                this.id = "Général";
+                this.id = "General";
                 this.value = 9;
                 break;
             case 12 : //Maréchal
-                this.id = "Maréchal";
+                this.id = "Marechal";
                 this.value = 10;
         }
         this.player = player;
