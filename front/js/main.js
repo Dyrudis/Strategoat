@@ -1,27 +1,34 @@
 let socket = io();
 
 let searchButton = document.getElementById("search");
-let username = document.getElementById("username");
+let usernameP = document.getElementById("username");
 let cancelButton = document.getElementById("cancel");
 let foundDiv = document.getElementById("found");
+
+let session = {
+    username: undefined
+}
 
 // Début de la recherche
 searchButton.addEventListener("click", event => {
     searchButton.style.display = "none";
     cancelButton.style.display = "block";
-    socket.emit("search", username.innerHTML);
+    socket.emit("search");
 })
 
 // Arrêt de la recherche
 cancelButton.addEventListener("click", event => {
     cancelButton.style.display = "none";
     searchButton.style.display = "block";
-    socket.emit("cancel", username.innerHTML);
+    socket.emit("cancel");
 });
 
-// Affichage du nom de l'utilisateur au chargmenent de la page
-socket.on("load", name => {
-    username.innerHTML = name;
+socket.on("load", username => {
+    // On récupére les informations de session au chargement de la page
+    session.username = username;
+
+    // Affichage du nom de l'utilisateur
+    usernameP.innerHTML = session.username;
 });
 
 // Partie trouvée

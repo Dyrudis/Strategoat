@@ -14,10 +14,17 @@ const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const connection = mysql.createConnection({
+    // Connexion à une base de donnée locale :
     host: "localhost",
     user: "root",
     password: "",
     database: "strategoat"
+
+    // Connexion à la base de donnée Heroku :
+    /* host: "eu-cdbr-west-03.cleardb.net",
+    user: "b8669c0ae18ee6",
+    password: "85dafeff",
+    database: "heroku_db2b00592774280" */
 });
 
 app.use(session);
@@ -37,8 +44,11 @@ let waitingPlayer = {
 };
 
 io.on("connection", (socket) => {
-
+    
     matchmaking(io, socket, waitingPlayer);
+
+    
+    socket.emit("load", socket.handshake.session.username);
 
 });
 
@@ -47,9 +57,6 @@ app.get("/", (req, res) => {
     if (req.session.username) {
         // Utilisateur connecté, on l'envoie vers la page d'accueil
         res.sendFile(`${__dirname}/front/html/index.html`);
-        io.on("connection", (socket) => {
-            socket.emit("load", socket.handshake.session.username);
-        });
     } else {
         // Utilisateur non connecté, on l'envoie vers la page de connexion
         res.sendFile(`${__dirname}/front/html/login.html`);
@@ -78,7 +85,7 @@ app.post("/login", (req, res) => {
 });
 
 // Création d'un nouveau compte
-app.post("/create", (req, res) => {
+app.post("/signin", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     if (username && password) {
@@ -105,6 +112,14 @@ app.post("/create", (req, res) => {
     }
 });
 
-http.listen(4200, () => {
-    console.log("Serveur lancé sur le port 4200");
+// Déconnexion du compte
+app.post("/logout", (req, res) => {
+    req.session.destroy();
+    res.redirect("/");
+});
+
+const port = process.env.PORT || 4200;
+
+http.listen(port, () => {
+    console.log(`Serveur lancé sur le port ${port}`);
 });
