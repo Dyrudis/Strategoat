@@ -63,11 +63,12 @@ class Stratego {
 
             console.log("Le drapeau ainsi que les bombes sont indeplacables.");
         }
-        //verification deplacement non-nul et non diagonal
+        //verification deplacement legal
         if ((x1 =! x2 && y1 != y2) && (x1 == x2 && y1 == y2)) { 
             
             console.log("Deplacement non-legal.");
         }
+        //verifications relatives aux eclaireurs
         if (this.tab[x1][y1].id == "Eclaireur"){
 
             //verification pas d'obstacle
@@ -101,9 +102,10 @@ class Stratego {
                 }
             }
         }
-        else this.escarmouche(x1, y1, x2, y2);
-
-
+        else if (Math.abs(x1 - x2) > 1 || Math.abs(y1 - y2) > 1) console.log("Deplacements de plus d'une case avec une unite non-eclaireur impossible.");
+        
+        
+        this.escarmouche(x1, y1, x2, y2);
 
         currentplayer = (currentplayer + 1) % 2;
     }
@@ -111,7 +113,7 @@ class Stratego {
     escarmouche(x1, y1, x2, y2) {
         //section interaction entre deux entites et consequences 
 
-
+        
     }
 
     reset() {
