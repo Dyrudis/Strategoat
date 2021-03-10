@@ -1,0 +1,38 @@
+html, body {
+    margin: 0;
+}
+
+#title {
+    text-align: center;
+}
+
+#main {
+    display: flex;
+}
+
+#pions {
+    width: 25%;
+}
+
+#pions ul li {
+    cursor: pointer;
+}
+
+#pions .selected {
+    color: red;
+}
+
+#stratego {
+    width: 50%;
+    height: auto;
+    border-collapse: collapse;
+}
+
+#stratego td {
+    border: 1px solid black;
+    padding-bottom: 10%;
+}
+
+#chat {
+    width: 25%;
+}
