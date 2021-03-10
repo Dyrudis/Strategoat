@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,17 +8,20 @@
     <script src="socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <h1>Strategoat</h1>
-    <form id="searchForm">
-        <input type="text" id="pseudo">
-        <button type="submit">Rechercher un adversaire</button>
-    </form>
-    <button id="cancel">Annuler</button>
+    <p id="username"></p>
+    <ul id="playerList">
+    </ul>
     <div id="found">
         <h2>Partie trouvée !</h2>
         <h3>Adversaire : </h3>
     </div>
+    <form action="logout" method="POST">
+        <input type="submit" value="Se déconnecter">
+    </form>
     <script src="js/main.js"></script>
 </body>
+
 </html>

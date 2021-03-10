@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,7 +18,11 @@
   },
   "homepage": "https://github.com/Dyrudis/Strategoat#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "express-socket.io-session": "^1.3.5",
+    "mysql": "^2.18.1",
     "socket.io": "^3.1.0"
   }
 }
