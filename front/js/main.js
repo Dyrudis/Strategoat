@@ -13,8 +13,11 @@ let usernameP = document.getElementById("username");
 let playerList = document.getElementById("playerList");
 let foundDiv = document.getElementById("found");
 
-// Chargement de la page
-socket.on("load", username => {
+// On dit au serveur que la page d'accueil est chargée
+socket.emit("load home");
+
+// Le serveur nous renvoie les informations correspondantes
+socket.on("load home", username => {
     // On récupére les informations de session envoyées par le serveur
     session.username = username;
 
@@ -66,6 +69,7 @@ socket.on("get invite", player => {
         let decline = document.createElement("button");
         decline.innerHTML = "Refuser";
         decline.addEventListener("click", () => {
+            socket.emit("decline", player, session.username);
             invites = invites.filter(name => name != player);
             decline.parentElement.remove();
         });
@@ -80,4 +84,6 @@ socket.on("get invite", player => {
 socket.on("found", opponentName => {
     foundDiv.style.display = "block";
     document.querySelector("#found h3").innerHTML = `Adversaire : ${opponentName} !`;
+    socket.emit("add session variable", "game", "oui");
+    setTimeout(() => window.location.href = "/", 3000);
 });

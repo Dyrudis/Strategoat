@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu - Strategoat</title>
+    <script src="socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="css/game.css">
+</head>
+
+<body>
+    <h1 id="title">Strategoat</h1>
+    <p id="username"></p>
+    <div id="main">
+        <div id="pions">
+            <ul>
+                <li class="pion" data-pion="1">Drapeau</li>
+                <li class="pion" data-pion="2">Bombe</li>
+                <li class="pion" data-pion="3">Espion</li>
+                <li class="pion" data-pion="4">Eclaireur</li>
+                <li class="pion" data-pion="5">Demineur</li>
+                <li class="pion" data-pion="6">Sergeant</li>
+                <li class="pion" data-pion="7">Lieutenant</li>
+                <li class="pion" data-pion="8">Capitaine</li>
+                <li class="pion" data-pion="9">Commandant</li>
+                <li class="pion" data-pion="10">Colonel</li>
+                <li class="pion" data-pion="11">General</li>
+                <li class="pion" data-pion="12">Marechal</li>
+            </ul>
+        </div>
+        <table id="stratego">
+            <tr>
+                <td class="case" data-row="9" data-column="0"></td>
+                <td class="case" data-row="9" data-column="1"></td>
+                <td class="case" data-row="9" data-column="2"></td>
+                <td class="case" data-row="9" data-column="3"></td>
+                <td class="case" data-row="9" data-column="4"></td>
+                <td class="case" data-row="9" data-column="5"></td>
+                <td class="case" data-row="9" data-column="6"></td>
+                <td class="case" data-row="9" data-column="7"></td>
+                <td class="case" data-row="9" data-column="8"></td>
+                <td class="case" data-row="9" data-column="9"></td>
+            </tr>
+            <tr>
+                <td class="case" data-row="8" data-column="0"></td>
+                <td class="case" data-row="8" data-column="1"></td>
+                <td class="case" data-row="8" data-column="2"></td>
+                <td class="case" data-row="8" data-column="3"></td>
+                <td class="case" data-row="8" data-column="4"></td>
+                <td class="case" data-row="8" data-column="5"></td>
+                <td class="case" data-row="8" data-column="6"></td>
+                <td class="case" data-row="8" data-column="7"></td>
+                <td class="case" data-row="8" data-column="8"></td>
+                <td class="case" data-row="8" data-column="9"></td>
+            </tr>
+            <tr>
+                <td class="case" data-row="7" data-column="0"></td>
+                <td class="case" data-row="7" data-column="1"></td>
+                <td class="case" data-row="7" data-column="2"></td>
+                <td class="case" data-row="7" data-column="3"></td>
+                <td class="case" data-row="7" data-column="4"></td>
+                <td class="case" data-row="7" data-column="5"></td>
+                <td class="case" data-row="7" data-column="6"></td>
+                <td class="case" data-row="7" data-column="7"></td>
+                <td class="case" data-row="7" data-column="8"></td>
+                <td class="case" data-row="7" data-column="9"></td>
+            </tr>
+            <tr>
+                <td class="case" data-row="6" data-column="0"></td>
+                <td class="case" data-row="6" data-column="1"></td>
+                <td class="case" data-row="6" data-column="2"></td>
+                <td class="case" data-row="6" data-column="3"></td>
+                <td class="case" data-row="6" data-column="4"></td>
+                <td class="case" data-row="6" data-column="5"></td>
+                <td class="case" data-row="6" data-column="6"></td>
+                <td class="case" data-row="6" data-column="7"></td>
+                <td class="case" data-row="6" data-column="8"></td>
+                <td class="case" data-row="6" data-column="9"></td>
+            </tr>
+            <tr>
+                <td class="case" data-row="5" data-column="0"></td>
+                <td class="case" data-row="5" data-column="1"></td>
+                <td class="case" data-row="5" data-column="2"></td>
+                <td class="case" data-row="5" data-column="3"></td>
+                <td class="case" data-row="5" data-column="4"></td>
+                <td class="case" data-row="5" data-column="5"></td>
+                <td class="case" data-row="5" data-column="6"></td>
+                <td class="case" data-row="5" data-column="7"></td>
+                <td class="case" data-row="5" data-column="8"></td>
+                <td class="case" data-row="5" data-column="9"></td>
+            </tr>
+            <tr>
+                <td class="case" data-row="4" data-column="0"></td>
+                <td class="case" data-row="4" data-column="1"></td>
+                <td class="case" data-row="4" data-column="2"></td>
+                <td class="case" data-row="4" data-column="3"></td>
+                <td class="case" data-row="4" data-column="4"></td>
+                <td class="case" data-row="4" data-column="5"></td>
+                <td class="case" data-row="4" data-column="6"></td>
+                <td class="case" data-row="4" data-column="7"></td>
+                <td class="case" data-row="4" data-column="8"></td>
+                <td class="case" data-row="4" data-column="9"></td>
+            </tr>
+            <tr>
+                <td class="case" data-row="3" data-column="0"></td>
+                <td class="case" data-row="3" data-column="1"></td>
+                <td class="case" data-row="3" data-column="2"></td>
+                <td class="case" data-row="3" data-column="3"></td>
+                <td class="case" data-row="3" data-column="4"></td>
+                <td class="case" data-row="3" data-column="5"></td>
+                <td class="case" data-row="3" data-column="6"></td>
+                <td class="case" data-row="3" data-column="7"></td>
+                <td class="case" data-row="3" data-column="8"></td>
+                <td class="case" data-row="3" data-column="9"></td>
+            </tr>
+            <tr>
+                <td class="case" data-row="2" data-column="0"></td>
+                <td class="case" data-row="2" data-column="1"></td>
+                <td class="case" data-row="2" data-column="2"></td>
+                <td class="case" data-row="2" data-column="3"></td>
+                <td class="case" data-row="2" data-column="4"></td>
+                <td class="case" data-row="2" data-column="5"></td>
+                <td class="case" data-row="2" data-column="6"></td>
+                <td class="case" data-row="2" data-column="7"></td>
+                <td class="case" data-row="2" data-column="8"></td>
+                <td class="case" data-row="2" data-column="9"></td>
+            </tr>
+            <tr>
+                <td class="case" data-row="1" data-column="0"></td>
+                <td class="case" data-row="1" data-column="1"></td>
+                <td class="case" data-row="1" data-column="2"></td>
+                <td class="case" data-row="1" data-column="3"></td>
+                <td class="case" data-row="1" data-column="4"></td>
+                <td class="case" data-row="1" data-column="5"></td>
+                <td class="case" data-row="1" data-column="6"></td>
+                <td class="case" data-row="1" data-column="7"></td>
+                <td class="case" data-row="1" data-column="8"></td>
+                <td class="case" data-row="1" data-column="9"></td>
+            </tr>
+            <tr>
+                <td class="case" data-row="0" data-column="0"></td>
+                <td class="case" data-row="0" data-column="1"></td>
+                <td class="case" data-row="0" data-column="2"></td>
+                <td class="case" data-row="0" data-column="3"></td>
+                <td class="case" data-row="0" data-column="4"></td>
+                <td class="case" data-row="0" data-column="5"></td>
+                <td class="case" data-row="0" data-column="6"></td>
+                <td class="case" data-row="0" data-column="7"></td>
+                <td class="case" data-row="0" data-column="8"></td>
+                <td class="case" data-row="0" data-column="9"></td>
+            </tr>
+        </table>
+        <div id="chat">
+            <ul></ul>
+            <form>
+                <input type="text" name="" id="">
+            </form>
+            <input type="submit" value="Envoyer le message">
+        </div>
+    </div>
+    <script src="js/game.js"></script>
+</body>
+
+</html>
