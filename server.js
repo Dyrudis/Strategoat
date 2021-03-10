@@ -29,7 +29,7 @@ const connection = mysql.createConnection({
 // Liste des joueurs connectés
 let players = [];
 
-require("./back/modules/lobby")(io, players);
+require("./back/modules/index")(io, players);
 require("./back/modules/game")(io, players);
 
 app.use(session);
