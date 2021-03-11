@@ -16,18 +16,18 @@ class Stratego {
 
         // Tableau des pions restants des 2 joueurs :
         this.pionCount = Array(2).fill({
-            "Marechal": 1,
-            "General": 1,
-            "Colonel": 2,
-            "Commandant": 3,
-            "Capitaine": 4,
-            "Lieutenant": 4,
-            "Sergeant": 4,
-            "Demineur": 5,
-            "Eclaireur": 8,
-            "Espion": 1,
-            "Bombe": 6,
-            "Drapeau": 1,
+            "12": 1,
+            "10": 1,
+            "9": 1,
+            "8": 2,
+            "7": 3,
+            "6": 4,
+            "5": 4,
+            "4": 4,
+            "3": 5,
+            "2": 8,
+            "1": 1,
+            "11": 6
         });
     }
 
@@ -59,61 +59,119 @@ class Stratego {
             return false;
         }
         //verification unite deplacable
-        if (this.tab[x1][y1].id == "Bombe" || this.tab[x1][y1].id == "Drapeau") {
+        if (this.tab[x1][y1].id == 11 || this.tab[x1][y1].id == 12) {
 
             console.log("Le drapeau ainsi que les bombes sont indeplacables.");
+            return false;
         }
         //verification deplacement legal
-        if ((x1 =! x2 && y1 != y2) && (x1 == x2 && y1 == y2)) { 
-            
+        if ((x1 = !x2 && y1 != y2) && (x1 == x2 && y1 == y2)) {
+
             console.log("Deplacement non-legal.");
+            return false;
         }
         //verifications relatives aux eclaireurs
-        if (this.tab[x1][y1].id == "Eclaireur"){
+        if (this.tab[x1][y1].id == 2) {
 
             //verification pas d'obstacle
             //---------------------------
             //cas deplacement vertical
             if (x1 == x2) {
                 //cas deplacement vers le haut
-                if (y1 < y2){
-                    for (let i = y1 + 1; i < y2; i++){
+                if (y1 < y2) {
+                    for (let i = y1 + 1; i < y2; i++) {
                         if (this.tab[x1][i]) console.log("Obstacle sur le chemin de l'eclaireur.");
+                        return false;
                     }
                 }
                 //cas deplacement vers le bas
-                else{
-                    for (let i = y1 - 1; i > y2; i--){
+                else {
+                    for (let i = y1 - 1; i > y2; i--) {
                         if (this.tab[x1][i]) console.log("Obstacle sur le chemin de l'eclaireur.");
+                        return false;
                     }
                 }
             }
             //cas deplacement horizontal
-            else{
+            else {
                 //cas deplacement vers la droite
-                if (x1 < x2){
-                    for (let i = x1 + 1; i < x2; i++){
+                if (x1 < x2) {
+                    for (let i = x1 + 1; i < x2; i++) {
                         if (this.tab[i][y1]) console.log("Obstacle sur le chemin de l'eclaireur.");
+                        return false;
                     }
                 }
                 //cas deplacement vers la gauche
-                for (let i = x1 - 1; i > x2; i--){
+                for (let i = x1 - 1; i > x2; i--) {
                     if (this.tab[i][y1]) console.log("Obstacle sur le chemin de l'eclaireur.");
+                    return false;
                 }
             }
         }
-        else if (Math.abs(x1 - x2) > 1 || Math.abs(y1 - y2) > 1) console.log("Deplacements de plus d'une case avec une unite non-eclaireur impossible.");
-        
-        
-        this.escarmouche(x1, y1, x2, y2);
+        else if (Math.abs(x1 - x2) > 1 || Math.abs(y1 - y2) > 1) {
+            console.log("Deplacements de plus d'une case avec une unite non-eclaireur impossible.");
+            return false;
+        }
 
+        //Si combat
+        if (this.tab[x2][y2].player == (currentplayer + 1) % 2) this.escarmouche(x1, y1, x2, y2);
+        //Sinon deplacement
+        else {
+            this.tab[x2][y2] = this.tab[x1][y1];
+            this.tab[x1][y1] = 0;
+        }
+
+        //Verification partie terminee
+        if (this.isFinished()) console.log("Partie terminee, joueur " + currentplayer + "gagne.");
+
+        //Actualisation du currentplayer
         currentplayer = (currentplayer + 1) % 2;
     }
 
-    escarmouche(x1, y1, x2, y2) {
-        //section interaction entre deux entites et consequences 
+    escarmouche() {
+        //section interaction entre deux entites, consequences et deplacement si attaquant vainqueur
 
-        
+        //SECTION EXEPTIONS
+        //-------------------------------
+
+        //Si case confrontee est une bombe
+        if (this.tab[x2][y2].id == 11) {
+
+            //Si attaquant non-demineur
+            if (this.tab[x1][y1].id != 3) attaquantPerd(x1, y1, x2, y2);
+            //Si attaquant demineur
+            else attaquantGagne(x1, y1, x2, y2);
+        }
+
+        //Si Espion attaque sur Marechal
+        else if (this.tab[x2][y2].id == 10 && this.tab[x1][y1].id == 1) attaquantGagne(x1, y1, x2, y2);
+
+        //-------------------------------
+
+
+        //Si attaquant gagne
+        else if (this.tab[x1][y1].id > this.tab[x2][y2].id) attaquantGagne(x1, y1, x2, y2);
+        else if (this.tab[x1][y1].id < this.tab[x2][y2].id) attaquantPerd(x1, y1, x2, y2);
+        else crossKill(x1, y1, x2, y2);
+
+    }
+
+    attaquantPerd(x1, y1, x2, y2) {
+        this.tab[x1][y1] = 0;
+        this.player.pionCount[currentplayer][this.tab[x1][y1].id]--;
+    }
+
+    attaquantGagne(x1, y1, x2, y2){
+        this.player.pionCount[(currentplayer + 1) % 2][this.tab[x2][y2].id]--;
+        this.tab[x2][y2] = this.tab[x1][y1];
+        this.tab[x1][y1] = 0;
+    }
+
+    crossKill(x1, y1, x2, y2) {
+        this.player.pionCount[currentplayer][this.tab[x1][y1].id]--;
+        this.player.pionCount[(currentplayer + 1) % 2][this.tab[x2][y2].id]--;
+        this.tab[x1][y1] = 0;
+        this.tab[x2][y2] = 0;
     }
 
     reset() {
@@ -127,18 +185,18 @@ class Stratego {
         }
 
         this.pionCount = Array(2).fill({
-            "Marechal": 1,
-            "General": 1,
-            "Colonel": 2,
-            "Commandant": 3,
-            "Capitaine": 4,
-            "Lieutenant": 4,
-            "Sergeant": 4,
-            "Demineur": 5,
-            "Eclaireur": 8,
-            "Espion": 1,
-            "Bombe": 6,
-            "Drapeau": 1
+            "12": 1,
+            "10": 1,
+            "9": 1,
+            "8": 2,
+            "7": 3,
+            "6": 4,
+            "5": 4,
+            "4": 4,
+            "3": 5,
+            "2": 8,
+            "1": 1,
+            "11": 6
         });
     }
 

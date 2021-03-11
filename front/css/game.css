@@ -1,5 +1,6 @@
 html, body {
     margin: 0;
+    overflow: hidden;
 }
 
 #title {
@@ -8,14 +9,16 @@ html, body {
 
 #main {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
 }
 
 #pions {
     width: 25%;
+    margin: 0;
+    padding: 0;
 }
 
-#pions ul li {
+#pions li {
     cursor: pointer;
     height: 30px;
     width: 125px;
@@ -24,45 +27,6 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-#pions ul li[data-pion="1"] {
-    background-color: red;
-}
-#pions ul li[data-pion="2"] {
-    background-color: blue;
-    color: white;
-}
-#pions ul li[data-pion="3"] {
-    background-color: green;
-}
-#pions ul li[data-pion="4"] {
-    background-color: yellow;
-}
-#pions ul li[data-pion="5"] {
-    background-color: orange;
-}
-#pions ul li[data-pion="6"] {
-    background-color: brown;
-    color: white;
-}
-#pions ul li[data-pion="7"] {
-    background-color: gold;
-}
-#pions ul li[data-pion="8"] {
-    background-color: cyan;
-}
-#pions ul li[data-pion="9"] {
-    background-color: purple;
-    color: white;
-}
-#pions ul li[data-pion="10"] {
-    background-color: pink;
-}
-#pions ul li[data-pion="11"] {
-    background-color: greenyellow;
-}
-#pions ul li[data-pion="12"] {
-    background-color: gray;
 }
 
 #stratego {
@@ -77,53 +41,74 @@ html, body {
     text-align: center;
 }
 
-#stratego td[data-pion="undefined"] {
+[data-pion="undefined"] {
     background-color: white;
     border: none;
 }
-#stratego td[data-pion="0"] {
+[data-pion="0"] {
     background-color: lightgrey;
 }
-#stratego td[data-pion="1"] {
-    background-color: red;
+[data-pion="1"] {
+    background-color: rgb(0, 82, 177);
+    color: white;
 }
-#stratego td[data-pion="2"] {
+[data-pion="2"] {
+    background-color: rgb(3, 153, 190);
+    color: white;
+}
+[data-pion="3"] {
+    background-color: rgb(4, 177, 162);
+    color: white;
+}
+[data-pion="4"] {
+    background-color: rgb(25, 185, 11);
+    color: white;
+}
+[data-pion="5"] {
+    background-color: rgb(28, 207, 11);
+    color: white;
+}
+[data-pion="6"] {
+    background-color: rgb(128, 212, 17);
+    color: white;
+}
+[data-pion="7"] {
+    background-color: rgb(238, 195, 3);
+    color: white;
+}
+[data-pion="8"] {
+    background-color: rgb(255, 145, 0);
+    color: white;
+}
+[data-pion="9"] {
+    background-color: rgb(255, 81, 0);
+    color: white;
+}
+[data-pion="10"] {
+    background-color: red;
+    color: white;
+}
+[data-pion="11"] {
     background-color: blue;
     color: white;
 }
-#stratego td[data-pion="3"] {
-    background-color: green;
-}
-#stratego td[data-pion="4"] {
-    background-color: yellow;
-}
-#stratego td[data-pion="5"] {
-    background-color: orange;
-}
-#stratego td[data-pion="6"] {
-    background-color: brown;
-    color: white;
-}
-#stratego td[data-pion="7"] {
-    background-color: gold;
-}
-#stratego td[data-pion="8"] {
-    background-color: cyan;
-}
-#stratego td[data-pion="9"] {
-    background-color: purple;
-    color: white;
-}
-#stratego td[data-pion="10"] {
-    background-color: pink;
-}
-#stratego td[data-pion="11"] {
-    background-color: greenyellow;
-}
-#stratego td[data-pion="12"] {
-    background-color: gray;
+[data-pion="12"] {
+    background-color: rgb(255, 255, 255);
 }
 
 #chat {
     width: 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+#chat form input {
+    width: 80%;
+    height: 20px;
+}
+
+#messages {
+    list-style-type: none;
+    padding: 0;
 }

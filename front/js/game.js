@@ -2,6 +2,29 @@
 let socket = io();
 socket.emit("load game");
 
+// Création de la liste
+const names = namesList["default"];
+addToList(12, names[12]);
+for (let i = 10; i > 0; i--) {
+    addToList(i, names[i]);
+}
+addToList(11, names[11]);
+
+function addToList(value, name) {
+    let li = document.createElement("li");
+    li.setAttribute("draggable", true);
+    li.setAttribute("ondragstart", "dragstart(event)");
+    li.setAttribute("data-pion", value);
+    li.classList.add("pion");
+    li.innerHTML = name;
+
+    let span = document.createElement("span");
+    span.classList.add("count");
+    li.appendChild(span);
+
+    document.getElementById("pions").appendChild(li);
+}
+
 // Création du tableau
 for (let y = 9; y >= 0; y--) {
     let tr = document.createElement("tr");
@@ -23,24 +46,26 @@ for (let y = 9; y >= 0; y--) {
     document.getElementById("stratego").appendChild(tr);
 }
 
-pionCount = {
+let ready = false;
+const pionCount = {
     "12": 1,
-    "11": 1,
-    "10": 2,
-    "9": 3,
-    "8": 4,
-    "7": 4,
+    "10": 1,
+    "9": 1,
+    "8": 2,
+    "7": 3,
     "6": 4,
-    "5": 5,
-    "4": 8,
-    "3": 1,
-    "2": 6,
+    "5": 4,
+    "4": 4,
+    "3": 5,
+    "2": 8,
     "1": 1,
-};
+    "11": 6
+}
 
 function displayPionCount() {
     for (const key in pionCount) {
-        document.querySelector("ul li[data-pion=\"" + key + "\"] span.count").innerHTML = ":" + pionCount[key];
+        const count = pionCount[key];
+        document.querySelector("li[data-pion=\"" + key + "\"] span.count").innerHTML = "\ : " + count;
     }
 }
 
@@ -77,7 +102,7 @@ function drop(e) {
         }
 
         // Déplacement vers une case vide
-        else {
+        else if (e.target.getAttribute("data-row") < 4) {
             previous.setAttribute("data-pion", 0);
             previous.innerHTML = "";
             previous.removeAttribute("draggable");
@@ -88,18 +113,72 @@ function drop(e) {
             next.setAttribute("draggable", true);
             next.setAttribute("ondragstart", "dragstart(event)");
         }
-
+        else {
+            sendToChat("Vous ne pouvez pas déplacer une unité en dehors de votre base.", "red");
+        }
     }
 
     // Ajout d'un pion sur le plateau
-    else if (e.target.getAttribute("data-pion") == 0 && pionCount[pion] > 0) {
-        e.target.setAttribute("data-pion", pion);
-        e.target.innerHTML = pion;
-        e.target.setAttribute("draggable", true);
-        e.target.setAttribute("ondragstart", "dragstart(event)");
+    else if (e.target.getAttribute("data-pion") == 0) {
+        if (pionCount[pion] > 0) {
+            if (e.target.getAttribute("data-row") < 4) {
+                e.target.setAttribute("data-pion", pion);
+                e.target.innerHTML = pion;
+                e.target.setAttribute("draggable", true);
+                e.target.setAttribute("ondragstart", "dragstart(event)");
 
-        pionCount[pion]--;
+                pionCount[pion]--;
+            }
+            else {
+                sendToChat("Vous ne pouvez pas déployer une unité en dehors de votre base.", "red");
+            }
+        }
+        else {
+            sendToChat("Vous n'avez plus ces unités en réserve.", "red");
+        }
+    }
+    else {
+        sendToChat("Vous ne pouvez pas écraser une unité existante.", "red");
     }
 
     displayPionCount();
+
+    if (isPlacementFinished()) {
+        document.getElementById("ready").disabled = false;
+    }
+    else {
+        document.getElementById("ready").disabled = true;
+    }
 }
+
+function sendToChat(message, color = "black") {
+    let li = document.createElement("li");
+    li.innerHTML = message;
+    li.style.color = color;
+    document.getElementById("messages").appendChild(li);
+}
+
+function isPlacementFinished() {
+    return !Object.values(pionCount).some(elem => elem != 0);
+}
+
+document.getElementById("ready").addEventListener("click", e => {
+    ready = !ready;
+    if (ready) {
+        e.target.innerHTML = "Pas prêt";
+        sendToChat("Vous êtes prêt.", "green");
+    }
+    else {
+        e.target.innerHTML = "Prêt";
+        sendToChat("Vous n'êtes plus prêt.", "green");
+    }
+});
+
+document.getElementById("chatForm").addEventListener("submit", e => {
+    e.preventDefault();
+    let message = document.getElementById("message");
+    if (message.value) {
+        sendToChat("You : " + message.value);
+    }
+    message.value = "";
+})

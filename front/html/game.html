@@ -11,34 +11,20 @@
 
 <body>
     <h1 id="title">Strategoat</h1>
-    <p id="username"></p>
     <div id="main">
-        <div id="pions">
-            <ul>
-                <li draggable="true" ondragstart="dragstart(event)" class="pion" data-pion="1">Drapeau <span class="count"></span></li>
-                <li draggable="true" ondragstart="dragstart(event)" class="pion" data-pion="2">Bombe <span class="count"></span></li>
-                <li draggable="true" ondragstart="dragstart(event)" class="pion" data-pion="3">Espion <span class="count"></span></li>
-                <li draggable="true" ondragstart="dragstart(event)" class="pion" data-pion="4">Eclaireur <span class="count"></span></li>
-                <li draggable="true" ondragstart="dragstart(event)" class="pion" data-pion="5">Demineur <span class="count"></span></li>
-                <li draggable="true" ondragstart="dragstart(event)" class="pion" data-pion="6">Sergeant <span class="count"></span></li>
-                <li draggable="true" ondragstart="dragstart(event)" class="pion" data-pion="7">Lieutenant <span class="count"></span></li>
-                <li draggable="true" ondragstart="dragstart(event)" class="pion" data-pion="8">Capitaine <span class="count"></span></li>
-                <li draggable="true" ondragstart="dragstart(event)" class="pion" data-pion="9">Commandant <span class="count"></span></li>
-                <li draggable="true" ondragstart="dragstart(event)" class="pion" data-pion="10">Colonel <span class="count"></span></li>
-                <li draggable="true" ondragstart="dragstart(event)" class="pion" data-pion="11">General <span class="count"></span></li>
-                <li draggable="true" ondragstart="dragstart(event)" class="pion" data-pion="12">Marechal <span class="count"></span></li>
-            </ul>
-        </div>
+        <ul id="pions">
+        </ul>
         <table id="stratego">
         </table>
         <div id="chat">
-            <ul></ul>
-            <form>
-                <input type="text" name="" id="">
+            <ul id="messages"></ul>
+            <form id="chatForm">
+                <input type="text" id="message" placeholder="Envoyer un message">
             </form>
-            <input type="submit" value="Envoyer le message">
         </div>
     </div>
+    <button id="ready" disabled>Prêt</button>
+    <script src="js/modules/names.js"></script>
     <script src="js/game.js"></script>
 </body>
 
