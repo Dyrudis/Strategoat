@@ -42,7 +42,7 @@ io.use(sharedSession(session, {
 
 // Arrivée sur l'accueil
 app.get("/", (req, res) => {
-    //res.sendFile(`${__dirname}/front/html/game.html`);
+    // res.sendFile(`${__dirname}/front/html/game.html`);
     if (req.session.username && req.session.game) {
         // Utilisateur connecté et dans une partie, on l'envoie vers la page de partie
         res.sendFile(`${__dirname}/front/html/game.html`);

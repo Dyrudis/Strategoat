@@ -1,5 +1,6 @@
 html, body {
-    margin: 0;  
+    margin: 0;
+    user-select: none;
 }
 
 #title {
@@ -111,6 +112,7 @@ html, body {
 
 #chat {
     width: 25%;
+    height : 500px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;

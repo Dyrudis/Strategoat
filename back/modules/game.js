@@ -1,16 +1,9 @@
+const Stratego = require("../models/stratego");
+
 module.exports = (io, players) => {
 
     // Liste des parties en cours
     let games = [];
-
-    function show() {
-        let i = 1;
-        games.forEach(game => {
-            console.log("Game " + i + " : ");
-            console.log(game.players);
-            i++;
-        })
-    }
 
     // Fonction qui renvoie le socket.id du joueur ayant le nom username
     function getId(username) {
@@ -31,8 +24,13 @@ module.exports = (io, players) => {
     }
 
     // Fonction qui renvoie la partie du joueur ayant le nom username
-    function getGame(username) {
+    function getGame(username) {    
         return games.find(game => game.players.find(player => player.username == username));
+    }
+
+    // Fonction qui renvoie la partie du joueur ayant le nom username
+    function getGameById(id) {    
+        return games.find(game => game.players.find(player => player.id == id));
     }
 
     // Fonction qui renvoie le nom de l'adversaire du joueur ayant le nom username
@@ -54,7 +52,7 @@ module.exports = (io, players) => {
         // Début de la partie
         socket.on("start game", (player1, player2) => {
             games.push({
-                // game: new Stratego(),   --> PLUS TARD
+                game: new Stratego(),
                 players: [
                     {
                         id: undefined,
@@ -68,9 +66,13 @@ module.exports = (io, players) => {
             });
         });
 
-        socket.on("click", () => {
-            socket.emit("click", socket.handshake.session.username);
-            socket.to(getId(getOpponent(socket.handshake.session.username))).emit("click", socket.handshake.session.username);
+        socket.on("message", (message) => {
+            let name = socket.handshake.session.username;
+            socket.to(getId(getOpponent(name))).emit("message", message, name);
+        });
+
+        socket.on("ready", (tab) => {
+            socket.id
         });
 
         // Déconnexion
