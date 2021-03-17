@@ -46,6 +46,7 @@ for (let y = 9; y >= 0; y--) {
     document.getElementById("stratego").appendChild(tr);
 }
 
+let tab = Array(4).fill().map(() => Array(10).fill(0));
 let ready = false;
 const pionCount = {
     "12": 1,
@@ -99,6 +100,10 @@ function drop(e) {
 
             next.setAttribute("data-pion", pion);
             next.innerHTML = pion;
+
+            let tmp = tab[3 - next.getAttribute("data-row")][next.getAttribute("data-column")];
+            tab[3 - next.getAttribute("data-row")][next.getAttribute("data-column")] = tab[3 - previous.getAttribute("data-row")][previous.getAttribute("data-column")];
+            tab[3 - previous.getAttribute("data-row")][previous.getAttribute("data-column")] = tmp;
         }
 
         // Déplacement vers une case vide
@@ -112,6 +117,9 @@ function drop(e) {
             next.innerHTML = pion;
             next.setAttribute("draggable", true);
             next.setAttribute("ondragstart", "dragstart(event)");
+
+            tab[3 - previous.getAttribute("data-row")][previous.getAttribute("data-column")] = 0;
+            tab[3 - next.getAttribute("data-row")][next.getAttribute("data-column")] = parseInt(pion);
         }
         else {
             sendToChat("Vous ne pouvez pas déplacer une unité en dehors de votre base.", "red");
@@ -127,6 +135,7 @@ function drop(e) {
                 e.target.setAttribute("draggable", true);
                 e.target.setAttribute("ondragstart", "dragstart(event)");
 
+                tab[3 - e.target.getAttribute("data-row")][e.target.getAttribute("data-column")] = parseInt(pion);
                 pionCount[pion]--;
             }
             else {
@@ -172,6 +181,9 @@ document.getElementById("ready").addEventListener("click", e => {
         e.target.innerHTML = "Prêt";
         sendToChat("Vous n'êtes plus prêt.", "green");
     }
+
+
+    socket.emit("ready", tab);
 });
 
 document.getElementById("chatForm").addEventListener("submit", e => {
@@ -179,6 +191,11 @@ document.getElementById("chatForm").addEventListener("submit", e => {
     let message = document.getElementById("message");
     if (message.value) {
         sendToChat("You : " + message.value);
+        socket.emit("message", message.value);
     }
     message.value = "";
 })
+
+socket.on("message", (message, name) => {
+    sendToChat(name + " : " + message);
+});
