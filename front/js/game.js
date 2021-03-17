@@ -11,18 +11,18 @@ for (let i = 10; i > 0; i--) {
 addToList(11, names[11]);
 
 function addToList(value, name) {
-    let li = document.createElement("li");
-    li.setAttribute("draggable", true);
-    li.setAttribute("ondragstart", "dragstart(event)");
-    li.setAttribute("data-pion", value);
-    li.classList.add("pion");
-    li.innerHTML = name;
+    let div = document.createElement("div");
+    div.setAttribute("draggable", true);
+    div.setAttribute("ondragstart", "dragstart(event)");
+    div.setAttribute("data-pion", value);
+    div.classList.add("pion");
+    div.innerHTML = name;
 
     let span = document.createElement("span");
     span.classList.add("count");
-    li.appendChild(span);
+    div.appendChild(span);
 
-    document.getElementById("pions").appendChild(li);
+    document.getElementById("pions").appendChild(div);
 }
 
 // Création du tableau
@@ -66,7 +66,7 @@ const pionCount = {
 function displayPionCount() {
     for (const key in pionCount) {
         const count = pionCount[key];
-        document.querySelector("li[data-pion=\"" + key + "\"] span.count").innerHTML = "\ : " + count;
+        document.querySelector("div[data-pion=\"" + key + "\"] span.count").innerHTML = "\ : " + count;
     }
 }
 
@@ -96,10 +96,8 @@ function drop(e) {
         // Swap entre deux pions
         if (next.getAttribute("data-pion") > 0) {
             previous.setAttribute("data-pion", next.getAttribute("data-pion"));
-            previous.innerHTML = next.innerHTML;
 
             next.setAttribute("data-pion", pion);
-            next.innerHTML = pion;
 
             let tmp = tab[3 - next.getAttribute("data-row")][next.getAttribute("data-column")];
             tab[3 - next.getAttribute("data-row")][next.getAttribute("data-column")] = tab[3 - previous.getAttribute("data-row")][previous.getAttribute("data-column")];
@@ -109,12 +107,10 @@ function drop(e) {
         // Déplacement vers une case vide
         else if (e.target.getAttribute("data-row") < 4) {
             previous.setAttribute("data-pion", 0);
-            previous.innerHTML = "";
             previous.removeAttribute("draggable");
             previous.removeAttribute("ondragstart");
 
             next.setAttribute("data-pion", pion);
-            next.innerHTML = pion;
             next.setAttribute("draggable", true);
             next.setAttribute("ondragstart", "dragstart(event)");
 
@@ -131,7 +127,6 @@ function drop(e) {
         if (pionCount[pion] > 0) {
             if (e.target.getAttribute("data-row") < 4) {
                 e.target.setAttribute("data-pion", pion);
-                e.target.innerHTML = pion;
                 e.target.setAttribute("draggable", true);
                 e.target.setAttribute("ondragstart", "dragstart(event)");
 
