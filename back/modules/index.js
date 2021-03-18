@@ -27,8 +27,7 @@ module.exports = (io, players) => {
 
         // Envoie d'une invitation
         socket.on("send invite", username => {
-            invitations.push(`${socket.handshake.session.username}:${username}`)
-            console.log(invitations);
+            invitations.push(`${socket.handshake.session.username}:${username}`);
             socket.to(getId(username)).emit("get invite", socket.handshake.session.username);
         });
 

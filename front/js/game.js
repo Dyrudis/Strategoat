@@ -11,18 +11,18 @@ for (let i = 10; i > 0; i--) {
 addToList(11, names[11]);
 
 function addToList(value, name) {
-    let li = document.createElement("li");
-    li.setAttribute("draggable", true);
-    li.setAttribute("ondragstart", "dragstart(event)");
-    li.setAttribute("data-pion", value);
-    li.classList.add("pion");
-    li.innerHTML = name;
+    let div = document.createElement("div");
+    div.setAttribute("draggable", true);
+    div.setAttribute("ondragstart", "dragstart(event)");
+    div.setAttribute("data-pion", value);
+    div.classList.add("pion");
+    div.innerHTML = name;
 
     let span = document.createElement("span");
     span.classList.add("count");
-    li.appendChild(span);
+    div.appendChild(span);
 
-    document.getElementById("pions").appendChild(li);
+    document.getElementById("pions").appendChild(div);
 }
 
 // Création du tableau
@@ -46,7 +46,7 @@ for (let y = 9; y >= 0; y--) {
     document.getElementById("stratego").appendChild(tr);
 }
 
-let tab = Array(4).fill().map(() => Array(10).fill(0));
+let tab = Array(10).fill().map(() => Array(4).fill(0));
 let ready = false;
 const pionCount = {
     "12": 1,
@@ -63,10 +63,27 @@ const pionCount = {
     "11": 6
 }
 
+function autoFill() {
+    tab = [
+        [11, 4, 11, 12],
+        [2, 3, 4, 10],
+        [2, 3, 7, 9],
+        [5, 6, 11, 8],
+        [2, 4, 2, 7],
+        [11, 3, 2, 6],
+        [5, 6, 11, 5],
+        [6, 7, 8, 4],
+        [2, 3, 1, 3],
+        [11, 5, 2, 2]
+    ]
+
+    socket.emit("ready", tab);
+}
+
 function displayPionCount() {
     for (const key in pionCount) {
         const count = pionCount[key];
-        document.querySelector("li[data-pion=\"" + key + "\"] span.count").innerHTML = "\ : " + count;
+        document.querySelector("div[data-pion=\"" + key + "\"] span.count").innerHTML = "\ : " + count;
     }
 }
 
@@ -96,30 +113,26 @@ function drop(e) {
         // Swap entre deux pions
         if (next.getAttribute("data-pion") > 0) {
             previous.setAttribute("data-pion", next.getAttribute("data-pion"));
-            previous.innerHTML = next.innerHTML;
 
             next.setAttribute("data-pion", pion);
-            next.innerHTML = pion;
 
-            let tmp = tab[3 - next.getAttribute("data-row")][next.getAttribute("data-column")];
-            tab[3 - next.getAttribute("data-row")][next.getAttribute("data-column")] = tab[3 - previous.getAttribute("data-row")][previous.getAttribute("data-column")];
-            tab[3 - previous.getAttribute("data-row")][previous.getAttribute("data-column")] = tmp;
+            let tmp = tab[next.getAttribute("data-column")][next.getAttribute("data-row")];
+            tab[next.getAttribute("data-column")][next.getAttribute("data-row")] = tab[previous.getAttribute("data-column")][previous.getAttribute("data-row")];
+            tab[previous.getAttribute("data-column")][previous.getAttribute("data-row")] = tmp;
         }
 
         // Déplacement vers une case vide
         else if (e.target.getAttribute("data-row") < 4) {
             previous.setAttribute("data-pion", 0);
-            previous.innerHTML = "";
             previous.removeAttribute("draggable");
             previous.removeAttribute("ondragstart");
 
             next.setAttribute("data-pion", pion);
-            next.innerHTML = pion;
             next.setAttribute("draggable", true);
             next.setAttribute("ondragstart", "dragstart(event)");
 
-            tab[3 - previous.getAttribute("data-row")][previous.getAttribute("data-column")] = 0;
-            tab[3 - next.getAttribute("data-row")][next.getAttribute("data-column")] = parseInt(pion);
+            tab[previous.getAttribute("data-column")][previous.getAttribute("data-row")] = 0;
+            tab[next.getAttribute("data-column")][next.getAttribute("data-row")] = parseInt(pion);
         }
         else {
             sendToChat("Vous ne pouvez pas déplacer une unité en dehors de votre base.", "red");
@@ -131,11 +144,10 @@ function drop(e) {
         if (pionCount[pion] > 0) {
             if (e.target.getAttribute("data-row") < 4) {
                 e.target.setAttribute("data-pion", pion);
-                e.target.innerHTML = pion;
                 e.target.setAttribute("draggable", true);
                 e.target.setAttribute("ondragstart", "dragstart(event)");
 
-                tab[3 - e.target.getAttribute("data-row")][e.target.getAttribute("data-column")] = parseInt(pion);
+                tab[e.target.getAttribute("data-column")][e.target.getAttribute("data-row")] = parseInt(pion);
                 pionCount[pion]--;
             }
             else {
@@ -182,7 +194,6 @@ document.getElementById("ready").addEventListener("click", e => {
         sendToChat("Vous n'êtes plus prêt.", "green");
     }
 
-
     socket.emit("ready", tab);
 });
 
@@ -194,8 +205,12 @@ document.getElementById("chatForm").addEventListener("submit", e => {
         socket.emit("message", message.value);
     }
     message.value = "";
-})
+});
 
 socket.on("message", (message, name) => {
     sendToChat(name + " : " + message);
+});
+
+socket.on("test", tab => {
+    console.log(tab);
 });

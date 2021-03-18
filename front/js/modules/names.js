@@ -1,4 +1,4 @@
-namesList = {
+const namesList = {
     "default": {
         1: "Espion",
         2: "Éclaireur",
@@ -13,7 +13,7 @@ namesList = {
         11: "Bombe",
         12: "Drapeau"
     },
-    "grecque": {
+    "greek": {
         1: "Cheval de Troie",
         2: "Envoyé d'Hermès",
         3: "Aspirant d'Héphaïstos",

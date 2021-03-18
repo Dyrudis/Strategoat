@@ -24,19 +24,19 @@ module.exports = (io, players) => {
     }
 
     // Fonction qui renvoie la partie du joueur ayant le nom username
-    function getGame(username) {    
+    function getGame(username) {
         return games.find(game => game.players.find(player => player.username == username));
-    }
-
-    // Fonction qui renvoie la partie du joueur ayant le nom username
-    function getGameById(id) {    
-        return games.find(game => game.players.find(player => player.id == id));
     }
 
     // Fonction qui renvoie le nom de l'adversaire du joueur ayant le nom username
     function getOpponent(username) {
         let game = getGame(username);
         return game.players[0].username == username ? game.players[1].username : game.players[0].username;
+    }
+
+    function isPlayer1(username) {
+        let game = getGame(username);
+        return game.players[0].username == username;
     }
 
     io.on("connection", (socket) => {
@@ -72,7 +72,49 @@ module.exports = (io, players) => {
         });
 
         socket.on("ready", (tab) => {
-            socket.id
+
+            // Tableau legal des pions d'un joueur :
+            let pionCount = {
+                "12": 1,
+                "10": 1,
+                "9": 1,
+                "8": 2,
+                "7": 3,
+                "6": 4,
+                "5": 4,
+                "4": 4,
+                "3": 5,
+                "2": 8,
+                "1": 1,
+                "11": 6
+            };
+
+            //Parcours les elements pour verifier
+            for (let y = 0; y < 4; y++) {
+                for (let x = 0; x < 10; x++) {
+                    
+                    //Décremente le compteur du pion associé
+                    pionCount[tab[x][y].toString()]--;
+                }
+            }
+
+            console.log(pionCount);
+
+            //Vérification que toutes les valeurs sont nulles
+            for (const key in pionCount) if (pionCount[key]) {
+                console.log("Disposition des troupes incorrecte.");
+                return;
+            }
+
+            let username = socket.handshake.session.username
+            let game = getGame(username).game;
+            for (let x = 0; x < 10; x++) {
+                for (let y = 0; y < 4; y++) {
+                    isPlayer1(username) ? game.set(x, y, tab[x][y]) : game.set(9 - x, 9 - y, tab[x][y]);
+                }
+            }
+
+            socket.emit("test", game.tab);
         });
 
         // Déconnexion
