@@ -5,24 +5,6 @@ module.exports = (io, players) => {
     // Liste des parties en cours
     let games = [];
 
-    // Fonction qui renvoie le socket.id du joueur ayant le nom username
-    function getId(username) {
-        for (let i = 0; i < games.length; i++) {
-            if (games[i].players.find(player => player.username == username)) {
-                return games[i].players.find(player => player.username == username).id;
-            }
-        }
-    }
-
-    // Fonction qui modifie le socket.id du joueur ayant le nom username
-    function setId(username, id) {
-        games.forEach(game => {
-            if (game.players.find(player => player.username == username)) {
-                game.players.find(player => player.username == username).id = id;
-            }
-        });
-    }
-
     // Fonction qui renvoie la partie du joueur ayant le nom username
     function getGame(username) {
         return games.find(game => game.players.find(player => player.username == username));
@@ -31,12 +13,17 @@ module.exports = (io, players) => {
     // Fonction qui renvoie le nom de l'adversaire du joueur ayant le nom username
     function getOpponent(username) {
         let game = getGame(username);
-        return game.players[0].username == username ? game.players[1].username : game.players[0].username;
+        return game.players[0].username == username ? game.players[1] : game.players[0];
     }
 
-    function isPlayer1(username) {
+    function getPlayer(username) {
         let game = getGame(username);
-        return game.players[0].username == username;
+        return game.players[0].username == username ? game.players[0] : game.players[1];
+    }
+
+    function getPlayerNumber(username) {
+        let game = getGame(username);
+        return game.players[0].username == username ? 0 : 1;
     }
 
     io.on("connection", (socket) => {
@@ -46,7 +33,7 @@ module.exports = (io, players) => {
             socket.emit("load game");
 
             // Attribution du bon socket id
-            setId(socket.handshake.session.username, socket.id);
+            getPlayer(socket.handshake.session.username).id = socket.id;
         })
 
         // Début de la partie
@@ -56,11 +43,13 @@ module.exports = (io, players) => {
                 players: [
                     {
                         id: undefined,
-                        username: player1
+                        username: player1,
+                        ready: false
                     },
                     {
                         id: undefined,
-                        username: player2
+                        username: player2,
+                        ready: false
                     }
                 ]
             });
@@ -68,7 +57,8 @@ module.exports = (io, players) => {
 
         socket.on("message", (message) => {
             let name = socket.handshake.session.username;
-            socket.to(getId(getOpponent(name))).emit("message", message, name);
+            socket.emit("message", message, "black", name);
+            socket.to(getOpponent(name).id).emit("message", message, "black", name);
         });
 
         socket.on("ready", (tab) => {
@@ -92,29 +82,49 @@ module.exports = (io, players) => {
             //Parcours les elements pour verifier
             for (let y = 0; y < 4; y++) {
                 for (let x = 0; x < 10; x++) {
-                    
+
                     //Décremente le compteur du pion associé
                     pionCount[tab[x][y].toString()]--;
                 }
             }
 
-            console.log(pionCount);
-
             //Vérification que toutes les valeurs sont nulles
             for (const key in pionCount) if (pionCount[key]) {
-                console.log("Disposition des troupes incorrecte.");
+                socket.emit("message", "/!\\ Triche détéctée : disposition des troupes incorrecte /!\\", "red");
                 return;
             }
 
-            let username = socket.handshake.session.username
+            let username = socket.handshake.session.username;
             let game = getGame(username).game;
             for (let x = 0; x < 10; x++) {
                 for (let y = 0; y < 4; y++) {
-                    isPlayer1(username) ? game.set(x, y, tab[x][y]) : game.set(9 - x, 9 - y, tab[x][y]);
+                    getPlayerNumber(username) == 0 ? game.set(x, y, tab[x][y]) : game.set(9 - x, 9 - y, tab[x][y]);
                 }
             }
 
-            socket.emit("test", game.tab);
+            getPlayer(username).ready = true;
+
+            // Les deux joueurs sont prêt
+            if (getOpponent(username).ready) {
+
+                socket.emit("message", "Tout le monde est prêt, la partie va démarrer...", "green");
+                socket.to(getOpponent(username).id).emit("message", "Tout le monde est prêt, la partie va démarrer...", "green");
+
+                socket.emit("start", game.tab);
+                socket.to(getOpponent(username).id).emit("start", game.tab);
+            }
+            // L'adversaire n'est pas encore prêt
+            else {
+                socket.emit("ready");
+                socket.to(getOpponent(username).id).emit("message", "Votre adversaire est prêt.", "green");
+            }
+        });
+
+        socket.on("not ready", () => {
+            let username = socket.handshake.session.username;
+            getPlayer(username).ready = false;
+            socket.emit("not ready");
+            socket.to(getOpponent(username).id).emit("message", "Votre adversaire n'est plus prêt.", "green");
         });
 
         // Déconnexion

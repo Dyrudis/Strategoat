@@ -48,7 +48,7 @@ for (let y = 9; y >= 0; y--) {
 
 let tab = Array(10).fill().map(() => Array(4).fill(0));
 let ready = false;
-const pionCount = {
+let pionCount = {
     "12": 1,
     "10": 1,
     "9": 1,
@@ -77,7 +77,14 @@ function autoFill() {
         [11, 5, 2, 2]
     ]
 
-    socket.emit("ready", tab);
+    for (const key in pionCount) {
+        pionCount[key] = 0;
+    }
+    // Affichage client
+    displayTab(tab);
+    displayPionCount();
+
+    document.getElementById("ready").disabled = false;
 }
 
 function displayPionCount() {
@@ -183,34 +190,93 @@ function isPlacementFinished() {
     return !Object.values(pionCount).some(elem => elem != 0);
 }
 
+function displayTab(tab) {
+    for (let x = 0; x < 10; x++) {
+        for (let y = 0; y < 4; y++) {
+            let td = document.querySelector("[data-column=\"" + x + "\"][data-row=\"" + y + "\"]");
+            td.setAttribute("data-pion", tab[x][y]);
+            td.setAttribute("draggable", true);
+            td.setAttribute("ondragstart", "dragstart(event)");
+        }
+    }
+}
+
 document.getElementById("ready").addEventListener("click", e => {
-    ready = !ready;
     if (ready) {
-        e.target.innerHTML = "Pas prêt";
-        sendToChat("Vous êtes prêt.", "green");
+        socket.emit("not ready");
     }
     else {
-        e.target.innerHTML = "Prêt";
-        sendToChat("Vous n'êtes plus prêt.", "green");
+        socket.emit("ready", tab);
     }
-
-    socket.emit("ready", tab);
 });
 
 document.getElementById("chatForm").addEventListener("submit", e => {
     e.preventDefault();
     let message = document.getElementById("message");
-    if (message.value) {
-        sendToChat("You : " + message.value);
+
+    if (message.value[0] == "/") {
+        let command = message.value.substring(1);
+        switch (command) {
+            case "ff":
+                sendToChat("Vous avez abandonné la partie.");
+                break;
+            default:
+                sendToChat("Commande inconnue.");
+                break;
+        }
+    }
+    else if (message.value) {
         socket.emit("message", message.value);
     }
     message.value = "";
 });
 
-socket.on("message", (message, name) => {
-    sendToChat(name + " : " + message);
+socket.on("message", (message, color, name) => {
+    if (name) {
+        message = name + " : " + message;
+    }
+    sendToChat(message, color);
 });
 
-socket.on("test", tab => {
-    console.log(tab);
+socket.on("ready", () => {
+    ready = true;
+    document.getElementById("ready").innerHTML = "Pas prêt";
+    sendToChat("Vous êtes prêt.", "green");
+});
+
+socket.on("not ready", () => {
+    ready = false;
+    document.getElementById("ready").innerHTML = "Prêt";
+    sendToChat("Vous n'êtes plus prêt.", "green");
+});
+
+// Fin de la phase de préparation
+socket.on("start", (tab) => {
+    pionCount = {
+        "12": 1,
+        "10": 1,
+        "9": 1,
+        "8": 2,
+        "7": 3,
+        "6": 4,
+        "5": 4,
+        "4": 4,
+        "3": 5,
+        "2": 8,
+        "1": 1,
+        "11": 6
+    }
+    displayPionCount();
+
+
+    for (let x = 0; x < 10; x++) {
+        for (let y = 0; y < 10; y++) {
+            let td = document.querySelector("[data-column=\"" + x + "\"][data-row=\"" + y + "\"]");
+            td.setAttribute("data-pion", tab[x][y]);
+            td.removeAttribute("draggable");
+            td.removeAttribute("ondragstart");
+        }
+    }
+
+    document.getElementById("ready").remove();
 });
