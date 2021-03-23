@@ -192,11 +192,18 @@ function isPlacementFinished() {
 
 function displayTab(tab) {
     for (let x = 0; x < 10; x++) {
-        for (let y = 0; y < 4; y++) {
+        for (let y = 0; y < 10; y++) {
             let td = document.querySelector("[data-column=\"" + x + "\"][data-row=\"" + y + "\"]");
-            td.setAttribute("data-pion", tab[x][y]);
-            td.setAttribute("draggable", true);
-            td.setAttribute("ondragstart", "dragstart(event)");
+            if (tab[x][y]) {
+                td.setAttribute("data-pion", tab[x][y]);
+                td.setAttribute("draggable", true);
+                td.setAttribute("ondragstart", "dragstart(event)");
+            }
+            else {
+                td.setAttribute("data-pion", -1);
+                td.removeAttribute("draggable");
+                td.removeAttribute("ondragstart");
+            }
         }
     }
 }
@@ -219,6 +226,9 @@ document.getElementById("chatForm").addEventListener("submit", e => {
         switch (command) {
             case "ff":
                 sendToChat("Vous avez abandonné la partie.");
+                break;
+            case "autofill":
+                autoFill();
                 break;
             default:
                 sendToChat("Commande inconnue.");
@@ -251,7 +261,7 @@ socket.on("not ready", () => {
 });
 
 // Fin de la phase de préparation
-socket.on("start", (tab) => {
+socket.on("start", () => {
     pionCount = {
         "12": 1,
         "10": 1,
@@ -268,15 +278,11 @@ socket.on("start", (tab) => {
     }
     displayPionCount();
 
-
-    for (let x = 0; x < 10; x++) {
-        for (let y = 0; y < 10; y++) {
-            let td = document.querySelector("[data-column=\"" + x + "\"][data-row=\"" + y + "\"]");
-            td.setAttribute("data-pion", tab[x][y]);
-            td.removeAttribute("draggable");
-            td.removeAttribute("ondragstart");
-        }
-    }
-
     document.getElementById("ready").remove();
+});
+
+// Mise à jour du plateau de jeu
+socket.on("update tab", tab => {
+    console.log("oui");
+    displayTab(tab);
 });
