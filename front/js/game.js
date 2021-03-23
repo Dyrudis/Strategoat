@@ -262,6 +262,8 @@ socket.on("not ready", () => {
 
 // Fin de la phase de préparation
 socket.on("start", () => {
+
+    sendToChat("Les deux joueurs sont prêts, la partie va commencer...", "green");
     pionCount = {
         "12": 1,
         "10": 1,
