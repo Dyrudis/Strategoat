@@ -26,12 +26,6 @@ const connection = mysql.createConnection({
     database: "heroku_db2b00592774280" */
 });
 
-// Liste des joueurs connectés
-let players = [];
-
-require("./back/modules/index")(io, players);
-require("./back/modules/game")(io, players);
-
 app.use(session);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -39,6 +33,18 @@ app.use(express.static(`${__dirname}/front/`));
 io.use(sharedSession(session, {
     autoSave: true
 }));
+
+
+const games = require("./back/modules/game");
+
+// Liste des joueurs connectés
+let players = [];
+
+require("./back/modules/index")(io, players);
+
+io.on("connection", (socket) => {
+    require("./back/modules/socket")(socket, games);
+});
 
 // Arrivée sur l'accueil
 app.get("/", (req, res) => {

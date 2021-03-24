@@ -119,6 +119,9 @@ html, body {
     background-color: white;
     border: none;
 }
+[data-pion="-1"] {
+    background-color: darkslategrey;
+}
 [data-pion="0"] {
     background-color: lightgrey;
 }
