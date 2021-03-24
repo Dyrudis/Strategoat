@@ -1,3 +1,5 @@
+const Pion = require("../models/pion");
+
 module.exports = function (socket, games) {
 
     // Début de la partie
@@ -14,9 +16,9 @@ module.exports = function (socket, games) {
         games.getPlayer(username).id = socket.id;
 
         // Si la partie a démarée, on renvoie le tableau
-        /* if (getGame(username).started) {
-            sendTabToClient(getGame(username), socket);
-        } */
+        if (games.getGame(username).started) {
+            socket.emit("reload tab", games.getTab(username));
+        }
     });
 
     // Message d'un joueur
@@ -67,7 +69,7 @@ module.exports = function (socket, games) {
         let game = games.getGame(username).game;
         for (let x = 0; x < 10; x++) {
             for (let y = 0; y < 4; y++) {
-                games.getPlayerNumber(username) == 0 ? game.set(x, y, tab[x][y]) : game.set(9 - x, 9 - y, tab[x][y]);
+                games.getPlayerNumber(username) == 0 ? game.set(x, y, new Pion(tab[x][y], 0)) : game.set(9 - x, 9 - y, new Pion(tab[x][y], 1));
             }
         }
 
@@ -81,10 +83,8 @@ module.exports = function (socket, games) {
             games.getGame(username).started = true;
 
             // On l'indique également aux joueurs
-            socket.emit("start");
-            socket.to(games.getOpponent(username).id).emit("start");
-
-            // sendTabToClient(getGame(username), socket);
+            socket.emit("start", games.getTab(username));
+            socket.to(games.getOpponent(username).id).emit("start", games.getTab(games.getOpponent(username).username));
         }
 
         // Si l'adversaire n'est pas encore prêt
@@ -106,6 +106,21 @@ module.exports = function (socket, games) {
         // On l'indique également aux joueurs
         socket.emit("not ready");
         socket.to(games.getOpponent(username).id).emit("message", "Votre adversaire n'est plus prêt.", "green");
+    });
+
+    socket.on("play", (x1, y1, x2, y2) => {
+        let username = socket.handshake.session.username;
+        if (games.getPlayerNumber(username) == 1) {
+            x1 = 9 - x1;
+            y1 = 9 - y1;
+            x2 = 9 - x2;
+            y2 = 9 - y2;
+        }
+        console.log("Le joueur " + games.getPlayerNumber(username) + " joue");
+        games.play(username, x1, y1, x2, y2);
+
+        socket.emit("update tab", games.getTab(username));
+        socket.to(games.getOpponent(username).id).emit("update tab", games.getTab(games.getOpponent(username).username));
     });
 
 }

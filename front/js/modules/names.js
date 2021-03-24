@@ -14,17 +14,17 @@ const namesList = {
         12: "Drapeau"
     },
     "greek": {
-        1: "Cheval de Troie",
-        2: "Envoyé d'Hermès",
-        3: "Aspirant d'Héphaïstos",
+        1: "Sinon",
+        2: "Speculatore",
+        3: "Forge-né",
         4: "Hoplite",
         5: "Myrmidon",
-        6: "Centaure",
-        7: "Minotaure",
-        8: "Cyclope",
-        9: "Champion d'Ares",
+        6: "Légionnaire",
+        7: "Centaure",
+        8: "Minotaure",
+        9: "Cyclope",
         10: "Zeus",
-        11: "Eclair de Zeus",
+        11: "Foudre",
         12: "Egide"
     }
 }

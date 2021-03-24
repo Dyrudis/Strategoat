@@ -109,21 +109,23 @@ html, body {
     -ms-overflow-style: none;
     scrollbar-width: none;
     user-select: text;
+    border : solid grey 1px;
+    box-shadow: 0px 51px 100px -60px grey inset;
 }
 
 #messages::-webkit-scrollbar {
     display: none;
 }
 
-[data-pion="undefined"] {
-    background-color: white;
+[data-pion="null"] {
+    background-color: lightgray;
     border: none;
 }
 [data-pion="-1"] {
     background-color: darkslategrey;
 }
 [data-pion="0"] {
-    background-color: lightgrey;
+    background-color: white;
 }
 [data-pion="1"] {
     background-image: url("../ressources/image/espion.png");

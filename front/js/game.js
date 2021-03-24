@@ -37,7 +37,7 @@ for (let y = 9; y >= 0; y--) {
         td.setAttribute("ondrop", "drop(event)");
         td.setAttribute("ondragover", "dragover(event)");
         if ([2, 3, 6, 7].includes(x) && [4, 5].includes(y)) {
-            td.setAttribute("data-pion", undefined);
+            td.setAttribute("data-pion", null);
             td.removeAttribute("ondrop");
             td.removeAttribute("ondragover");
         }
@@ -82,12 +82,12 @@ function autoFill() {
     }
     // Affichage client
     displayTab(tab);
-    displayPionCount();
+    displayPionCount(pionCount);
 
     document.getElementById("ready").disabled = false;
 }
 
-function displayPionCount() {
+function displayPionCount(pionCount) {
     for (const key in pionCount) {
         const count = pionCount[key];
         document.querySelector("div[data-pion=\"" + key + "\"] span.count").innerHTML = "\ : " + count;
@@ -179,11 +179,24 @@ function drop(e) {
     }
 }
 
+function dropGame(e) {
+    e.preventDefault();
+    let data = e.dataTransfer.getData("text/plain").split(":");
+    let x = data[1];
+    let y = data[2];
+    let x2 = e.target.getAttribute("data-column");
+    let y2 = e.target.getAttribute("data-row");
+    socket.emit("play", x, y, x2, y2);
+    sendToChat(`(${x},${y}) -> (${x2},${y2})`, "orange");
+}
+
 function sendToChat(message, color = "black") {
     let li = document.createElement("li");
     li.innerHTML = message;
     li.style.color = color;
-    document.getElementById("messages").appendChild(li);
+    let messages = document.getElementById("messages");
+    messages.appendChild(li);
+    messages.scrollTop = messages.scrollHeight;
 }
 
 function isPlacementFinished() {
@@ -194,15 +207,17 @@ function displayTab(tab) {
     for (let x = 0; x < 10; x++) {
         for (let y = 0; y < 10; y++) {
             let td = document.querySelector("[data-column=\"" + x + "\"][data-row=\"" + y + "\"]");
-            if (tab[x][y]) {
-                td.setAttribute("data-pion", tab[x][y]);
+            td.setAttribute("data-pion", tab[x][y]);
+            if (tab[x][y] != undefined && tab[x][y] != -1 && tab[x][y] != 0) {
                 td.setAttribute("draggable", true);
                 td.setAttribute("ondragstart", "dragstart(event)");
+                td.removeAttribute("ondragover");
+                td.removeAttribute("ondrop");
             }
             else {
-                td.setAttribute("data-pion", -1);
                 td.removeAttribute("draggable");
                 td.removeAttribute("ondragstart");
+                td.setAttribute("ondrop", "dropGame(event)");
             }
         }
     }
@@ -261,30 +276,33 @@ socket.on("not ready", () => {
 });
 
 // Fin de la phase de préparation
-socket.on("start", () => {
+socket.on("start", (tab, pionCount) => {
 
     sendToChat("Les deux joueurs sont prêts, la partie va commencer...", "green");
-    pionCount = {
-        "12": 1,
-        "10": 1,
-        "9": 1,
-        "8": 2,
-        "7": 3,
-        "6": 4,
-        "5": 4,
-        "4": 4,
-        "3": 5,
-        "2": 8,
-        "1": 1,
-        "11": 6
-    }
-    displayPionCount();
+    displayPionCount(pionCount);
+    displayTab(tab);
 
     document.getElementById("ready").remove();
+    [...document.getElementById("pions").children].forEach(child => {
+        child.removeAttribute("draggable");
+        child.removeAttribute("ondragstart");
+    });
 });
 
 // Mise à jour du plateau de jeu
-socket.on("update tab", tab => {
-    console.log("oui");
+socket.on("update tab", (tab, pionCount) => {
     displayTab(tab);
+    displayPionCount(pionCount);
+});
+
+// Après un reload de la page
+socket.on("reload tab", (tab, pionCount) => {
+    document.getElementById("ready").remove();
+    [...document.getElementById("pions").children].forEach(child => {
+        child.removeAttribute("draggable");
+        child.removeAttribute("ondragstart");
+        child.style.cursor = "default";
+    });
+    displayTab(tab);
+    displayPionCount(pionCount);
 });

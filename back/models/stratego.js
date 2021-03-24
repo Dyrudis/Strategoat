@@ -48,9 +48,19 @@ class Stratego {
             console.log("Le pion selectionne n'appartient pas au joueur dont c'est le tour.");
             return false;
         }
-        //verification case non lac
+        //verification pion
+        if (this.tab[x1][y1].player == undefined) {
+            console.log("La case de depart selectionnee n'est pas un pion.");
+            return false;
+        }
+        //verification case arrive non lac
         if (this.tab[x2][y2] == undefined) {
             console.log("La case d'arrivee selectionnee est une case \"Lac\".");
+            return false;
+        }
+        //verification case depart non lac
+        if (this.tab[x1][y1] == undefined) {
+            console.log("La case depart selectionnee est une case \"Lac\".");
             return false;
         }
         //verification cible non alliee
@@ -65,7 +75,7 @@ class Stratego {
             return false;
         }
         //verification deplacement legal
-        if ((x1 = !x2 && y1 != y2) && (x1 == x2 && y1 == y2)) {
+        if ((x1 == !x2 && y1 != y2) && (x1 == x2 && y1 == y2)) {
 
             console.log("Deplacement non-legal.");
             return false;
@@ -114,7 +124,7 @@ class Stratego {
         }
 
         //Si combat
-        if (this.tab[x2][y2].player == (currentplayer + 1) % 2) this.escarmouche(x1, y1, x2, y2);
+        if (this.tab[x2][y2].player == (this.currentplayer + 1) % 2) this.escarmouche(x1, y1, x2, y2);
         //Sinon deplacement
         else {
             this.tab[x2][y2] = this.tab[x1][y1];
@@ -122,10 +132,10 @@ class Stratego {
         }
 
         //Verification partie terminee
-        if (this.isFinished()) console.log("Partie terminee, joueur " + currentplayer + "gagne.");
+        if (this.isFinished()) console.log("Partie terminee, joueur " + this.currentplayer + "gagne.");
 
         //Actualisation du currentplayer
-        currentplayer = (currentplayer + 1) % 2;
+        this.currentplayer = (this.currentplayer + 1) % 2;
     }
 
     escarmouche() {
@@ -158,18 +168,18 @@ class Stratego {
 
     attaquantPerd(x1, y1, x2, y2) {
         this.tab[x1][y1] = 0;
-        this.player.pionCount[currentplayer][this.tab[x1][y1].id]--;
+        this.player.pionCount[this.currentplayer][this.tab[x1][y1].id]--;
     }
 
-    attaquantGagne(x1, y1, x2, y2){
-        this.player.pionCount[(currentplayer + 1) % 2][this.tab[x2][y2].id]--;
+    attaquantGagne(x1, y1, x2, y2) {
+        this.player.pionCount[(this.currentplayer + 1) % 2][this.tab[x2][y2].id]--;
         this.tab[x2][y2] = this.tab[x1][y1];
         this.tab[x1][y1] = 0;
     }
 
     crossKill(x1, y1, x2, y2) {
-        this.player.pionCount[currentplayer][this.tab[x1][y1].id]--;
-        this.player.pionCount[(currentplayer + 1) % 2][this.tab[x2][y2].id]--;
+        this.player.pionCount[this.currentplayer][this.tab[x1][y1].id]--;
+        this.player.pionCount[(this.currentplayer + 1) % 2][this.tab[x2][y2].id]--;
         this.tab[x1][y1] = 0;
         this.tab[x2][y2] = 0;
     }
