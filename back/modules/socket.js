@@ -85,6 +85,16 @@ module.exports = function (socket, games) {
             // On l'indique également aux joueurs
             socket.emit("start", games.getTab(username));
             socket.to(games.getOpponent(username).id).emit("start", games.getTab(games.getOpponent(username).username));
+
+            // On indique au joueur 1 que c'est à sont tour
+            if (games.getPlayerNumber(username) == 0) {
+                socket.emit("message", "C'est à vous de jouer !", "green");
+                socket.to(games.getOpponent(username).id).emit("message", "Votre adversaire est en train de jouer !", "green");
+            }
+            else {
+                socket.emit("message", "Votre adversaire est en train de jouer !", "green");
+                socket.to(games.getOpponent(username).id).emit("message", "C'est à vous de jouer !", "green");
+            }
         }
 
         // Si l'adversaire n'est pas encore prêt
@@ -109,18 +119,31 @@ module.exports = function (socket, games) {
     });
 
     socket.on("play", (x1, y1, x2, y2) => {
+
         let username = socket.handshake.session.username;
+
+        // Si c'est le joueur 2 qui joue, on inverse ses coordonnées (vue symmétrique)
         if (games.getPlayerNumber(username) == 1) {
             x1 = 9 - x1;
             y1 = 9 - y1;
             x2 = 9 - x2;
             y2 = 9 - y2;
         }
-        console.log("Le joueur " + games.getPlayerNumber(username) + " joue");
-        games.play(username, x1, y1, x2, y2);
 
-        socket.emit("update tab", games.getTab(username));
-        socket.to(games.getOpponent(username).id).emit("update tab", games.getTab(games.getOpponent(username).username));
+        let result = games.play(username, x1, y1, x2, y2);
+
+        // Erreur lors du tour
+        if (result.success == false) {
+            socket.emit("message", result.error, "red");
+        }
+        // Le tour s'est bien déroulé
+        else {
+            socket.emit("update tab", games.getTab(username));
+            socket.to(games.getOpponent(username).id).emit("update tab", games.getTab(games.getOpponent(username).username));
+
+            socket.emit("message", "Votre adversaire est en train de jouer !", "green");
+            socket.to(games.getOpponent(username).id).emit("message", "C'est à vous de jouer !", "green");
+        }
     });
 
 }

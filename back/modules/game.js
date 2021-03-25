@@ -76,7 +76,7 @@ let self = module.exports = {
 
     play: (username, x1, y1, x2, y2) => {
         let game = self.getGame(username).game;
-        game.play(x1 ,y1, x2, y2);
+        return game.play(x1 ,y1, x2, y2);
     }
 
 }

@@ -187,7 +187,6 @@ function dropGame(e) {
     let x2 = e.target.getAttribute("data-column");
     let y2 = e.target.getAttribute("data-row");
     socket.emit("play", x, y, x2, y2);
-    sendToChat(`(${x},${y}) -> (${x2},${y2})`, "orange");
 }
 
 function sendToChat(message, color = "black") {
@@ -208,16 +207,29 @@ function displayTab(tab) {
         for (let y = 0; y < 10; y++) {
             let td = document.querySelector("[data-column=\"" + x + "\"][data-row=\"" + y + "\"]");
             td.setAttribute("data-pion", tab[x][y]);
+
+            // Case pion possédé
             if (tab[x][y] != undefined && tab[x][y] != -1 && tab[x][y] != 0) {
                 td.setAttribute("draggable", true);
                 td.setAttribute("ondragstart", "dragstart(event)");
                 td.removeAttribute("ondragover");
                 td.removeAttribute("ondrop");
             }
+
+            // Case vide ou pion adverse
+            else if (tab[x][y] == 0 || tab[x][y] == -1) {
+                td.removeAttribute("draggable");
+                td.removeAttribute("ondragstart");
+                td.setAttribute("ondragover", "dragover(event)");
+                td.setAttribute("ondrop", "dropGame(event)");
+            }
+
+            // Case lac (aucune intéraction possible)
             else {
                 td.removeAttribute("draggable");
                 td.removeAttribute("ondragstart");
-                td.setAttribute("ondrop", "dropGame(event)");
+                td.removeAttribute("ondragover");
+                td.removeAttribute("ondrop");
             }
         }
     }

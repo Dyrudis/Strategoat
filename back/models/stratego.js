@@ -33,11 +33,15 @@ class Stratego {
 
     set(x, y, value) {
         if (this.tab[x][y] == undefined) {
-            console.log("Impossible modifier une case lac");
-            return false;
+            return {
+                success: false,
+                error: "Impossible modifier une case lac"
+            };
         }
         this.tab[x][y] = value;
-        return true;
+        return {
+            success: true
+        };
     }
 
     play(x1, y1, x2, y2) {
@@ -45,40 +49,53 @@ class Stratego {
 
         //verification appartenance du pion
         if (this.tab[x1][y1].player != this.currentPlayer) {
-            console.log("Le pion selectionne n'appartient pas au joueur dont c'est le tour.");
-            return false;
+            return {
+                success: false,
+                error: "Le pion selectionne n'appartient pas au joueur dont c'est le tour."
+            };
         }
         //verification pion
         if (this.tab[x1][y1].player == undefined) {
-            console.log("La case de depart selectionnee n'est pas un pion.");
-            return false;
+            return {
+                success: false,
+                error: "La case de depart selectionnee n'est pas un pion."
+            };
         }
         //verification case arrive non lac
         if (this.tab[x2][y2] == undefined) {
-            console.log("La case d'arrivee selectionnee est une case \"Lac\".");
-            return false;
+            return {
+                success: false,
+                error: "La case d'arrivee selectionnee est une case \"Lac\"."
+            };
         }
         //verification case depart non lac
         if (this.tab[x1][y1] == undefined) {
-            console.log("La case depart selectionnee est une case \"Lac\".");
-            return false;
+            return {
+                success: false,
+                error: "La case depart selectionnee est une case \"Lac\"."
+            };
         }
         //verification cible non alliee
         if (this.tab[x2][y2].player == this.currentPlayer) {
-            console.log("Il est impossible de deplacer l'un de ses pions sur l'un de ses autres pions.");
-            return false;
+            return {
+                success: false,
+                error: "Il est impossible de deplacer l'un de ses pions sur l'un de ses autres pions."
+            };
         }
         //verification unite deplacable
         if (this.tab[x1][y1].id == 11 || this.tab[x1][y1].id == 12) {
-
             console.log("Le drapeau ainsi que les bombes sont indeplacables.");
-            return false;
+            return {
+                success: false,
+                error: "Deplacement non-legal."
+            };
         }
         //verification deplacement legal
-        if ((x1 == !x2 && y1 != y2) && (x1 == x2 && y1 == y2)) {
-
-            console.log("Deplacement non-legal.");
-            return false;
+        if ((x1 != x2 && y1 != y2) || (x1 == x2 && y1 == y2)) {
+            return {
+                success: false,
+                error: "Deplacement non-legal."
+            };
         }
         //verifications relatives aux eclaireurs
         if (this.tab[x1][y1].id == 2) {
@@ -90,15 +107,23 @@ class Stratego {
                 //cas deplacement vers le haut
                 if (y1 < y2) {
                     for (let i = y1 + 1; i < y2; i++) {
-                        if (this.tab[x1][i]) console.log("Obstacle sur le chemin de l'eclaireur.");
-                        return false;
+                        if (this.tab[x1][i]) {
+                            return {
+                                success: false,
+                                error: "Obstacle sur le chemin de l'eclaireur."
+                            };
+                        }
                     }
                 }
                 //cas deplacement vers le bas
                 else {
                     for (let i = y1 - 1; i > y2; i--) {
-                        if (this.tab[x1][i]) console.log("Obstacle sur le chemin de l'eclaireur.");
-                        return false;
+                        if (this.tab[x1][i]) {
+                            return {
+                                success: false,
+                                error: "Obstacle sur le chemin de l'eclaireur."
+                            };
+                        }
                     }
                 }
             }
@@ -107,20 +132,30 @@ class Stratego {
                 //cas deplacement vers la droite
                 if (x1 < x2) {
                     for (let i = x1 + 1; i < x2; i++) {
-                        if (this.tab[i][y1]) console.log("Obstacle sur le chemin de l'eclaireur.");
-                        return false;
+                        if (this.tab[i][y1]) {
+                            return {
+                                success: false,
+                                error: "Obstacle sur le chemin de l'eclaireur."
+                            };
+                        }
                     }
                 }
                 //cas deplacement vers la gauche
                 for (let i = x1 - 1; i > x2; i--) {
-                    if (this.tab[i][y1]) console.log("Obstacle sur le chemin de l'eclaireur.");
-                    return false;
+                    if (this.tab[i][y1]) {
+                        return {
+                            success: false,
+                            error: "Obstacle sur le chemin de l'eclaireur."
+                        };
+                    }
                 }
             }
         }
         else if (Math.abs(x1 - x2) > 1 || Math.abs(y1 - y2) > 1) {
-            console.log("Deplacements de plus d'une case avec une unite non-eclaireur impossible.");
-            return false;
+            return {
+                success: false,
+                error: "Deplacements de plus d'une case avec une unite non-eclaireur impossible."
+            };
         }
 
         //Si combat
@@ -135,10 +170,14 @@ class Stratego {
         if (this.isFinished()) console.log("Partie terminee, joueur " + this.currentplayer + "gagne.");
 
         //Actualisation du currentplayer
-        this.currentplayer = (this.currentplayer + 1) % 2;
+        this.currentPlayer = (this.currentPlayer + 1) % 2;
+
+        return {
+            success: true
+        };
     }
 
-    escarmouche() {
+    escarmouche(x1, y1, x2, y2) {
         //section interaction entre deux entites, consequences et deplacement si attaquant vainqueur
 
         //SECTION EXEPTIONS
@@ -211,6 +250,8 @@ class Stratego {
     }
 
     isFinished() {
+        console.log(this.pionCount[0]);
+        console.log(this.pionCount[1]);
         // Partie terminee si un joueur n'a plus de drapeau ou si un joueur ne peut plus se deplacer
         return this.pionCount.some((pions) => pions.Drapeau == 0 || Object.values(pions).slice(0, 10).every(value => value == 0));
     }
