@@ -122,6 +122,12 @@ module.exports = function (socket, games) {
 
         let username = socket.handshake.session.username;
 
+        // Si la partie est terminée, il est impossible de jouer
+        if (games.getGame(username).finished) {
+            socket.emit("message", "Partie terminée, impossible de jouer.", "red");
+            return
+        }
+
         // Si c'est le joueur 2 qui joue, on inverse ses coordonnées (vue symmétrique)
         if (games.getPlayerNumber(username) == 1) {
             x1 = 9 - x1;
@@ -134,7 +140,23 @@ module.exports = function (socket, games) {
 
         // Erreur lors du tour
         if (result.success == false) {
-            socket.emit("message", result.error, "red");
+            socket.emit("message", result.message, "red");
+        }
+        // Le tour s'est bien déroulé mais la partie est terminée
+        else if (result.winner != undefined) {
+            let winner = games.getGame(username).players[result.winner];
+
+            console.log(winner.username + " gagne !");
+
+            games.getGame(username).finished = true;
+            
+            // On envoie le tableau (révélation des cases adverses)
+            socket.emit("end", games.getTab(username));
+            socket.to(games.getOpponent(username).id).emit("end", games.getTab(games.getOpponent(username).username));
+            
+            // Notification par message
+            socket.emit("message", "Partie terminé, " + winner.username + " remporte la victoire !", "green");
+            socket.to(games.getOpponent(username).id).emit("message", "Partie terminé, " + winner.username + " remporte la victoire !", "green");
         }
         // Le tour s'est bien déroulé
         else {

@@ -163,3 +163,56 @@ html, body {
 [data-pion="12"] {
     background-image:url("../ressources/image/soldat.jpg");
 }
+
+[data-pion="&0"] {
+    background-color: white;
+    filter: grayscale(80%);
+}
+[data-pion="&1"] {
+    background-image: url("../ressources/image/espion.png");
+    filter: grayscale(80%);
+}
+[data-pion="&2"] {
+    background-image:url("../ressources/image/hermes.jpg");
+    filter: grayscale(80%);
+}
+[data-pion="&3"] {
+    background-image:url("../ressources/image/hephamachintruc.jpg");
+    filter: grayscale(80%);
+}
+[data-pion="&4"] {
+    background-image:url("../ressources/image/casquev2.jpg");
+    filter: grayscale(80%);
+}
+[data-pion="&5"] {
+    background-image:url("../ressources/image/casque.jpg");
+    filter: grayscale(80%);
+}
+[data-pion="&6"] {
+    background-image:url("../ressources/image/centaure.jpg");
+    filter: grayscale(80%);
+}
+[data-pion="&7"] {
+    background-image:url("../ressources/image/minautore.jpg");
+    filter: grayscale(80%);
+}
+[data-pion="&8"] {
+    background-image:url("../ressources/image/cyclope.jpg");
+    filter: grayscale(80%);
+}
+[data-pion="&9"] {
+    background-image:url("../ressources/image/ares.jpg");
+    filter: grayscale(80%);
+}
+[data-pion="&10"] {
+    background-image:url("../ressources/image/zeus.jpg");
+    filter: grayscale(80%);
+}
+[data-pion="&11"] {
+    background-image:url("../ressources/image/eclairzeus.jpg");
+    filter: grayscale(80%);
+}
+[data-pion="&12"] {
+    background-image:url("../ressources/image/soldat.jpg");
+    filter: grayscale(80%);
+}

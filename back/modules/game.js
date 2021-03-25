@@ -21,7 +21,8 @@ let self = module.exports = {
                     ready: false
                 }
             ],
-            started: false
+            started: false,
+            finished: false
         });
 
         console.log(`Nouvelle partie : ${player1} vs ${player2}`);
@@ -53,13 +54,19 @@ let self = module.exports = {
     getTab: (username) => {
         let tab = self.getGame(username).game.tab;
         let playerNumber = self.getPlayerNumber(username);
-        let clientTab = Array(10).fill(0).map(x => Array(10).fill(0));
+        let clientTab = Array(10).fill(0).map(() => Array(10).fill(0));
 
-        // On ne copie pas les cases appartenant à l'adversaire
         for (let x = 0; x < 10; x++) {
             for (let y = 0; y < 10; y++) {
                 if (tab[x][y]) {
-                    clientTab[x][y] = (tab[x][y].player == playerNumber ? tab[x][y].id : -1);
+                    // Si la partie n'est pas terminée, on n'affiche pas les pions adverse
+                    if (self.getGame(username).finished == false) {
+                        clientTab[x][y] = (tab[x][y].player == playerNumber ? tab[x][y].id : -1);
+                    }
+                    // Si la partie est terminée, on peut tout affiche à l'utilisateur
+                    else {
+                        clientTab[x][y] = (tab[x][y].player == playerNumber ? tab[x][y].id : "&" + tab[x][y].id);
+                    }
                 }
                 else {
                     clientTab[x][y] = tab[x][y];
@@ -76,7 +83,11 @@ let self = module.exports = {
 
     play: (username, x1, y1, x2, y2) => {
         let game = self.getGame(username).game;
-        return game.play(x1 ,y1, x2, y2);
+        return game.play(x1, y1, x2, y2);
+    },
+
+    delete: (username) => {
+        games.filter(game => game != self.getGame(username));
     }
 
 }

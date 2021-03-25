@@ -318,3 +318,8 @@ socket.on("reload tab", (tab, pionCount) => {
     displayTab(tab);
     displayPionCount(pionCount);
 });
+
+socket.on("end", (tab, pionCount) => {
+    displayTab(tab);
+    displayPionCount(pionCount);
+});
