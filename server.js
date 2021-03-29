@@ -63,7 +63,7 @@ app.get("/", (req, res) => {
 });
 
 // Connexion à un compte existant
-app.post("/login", (req, res) => {
+app.post("/signin", (req, res) => {
     if (req.session.username == undefined) {
         const username = req.body.username;
         const password = req.body.password;
@@ -89,9 +89,10 @@ app.post("/login", (req, res) => {
 });
 
 // Création d'un nouveau compte
-app.post("/signin", (req, res) => {
+app.post("/signup", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
+    const email = req.body.email;
     if (username && password) {
         connection.query("SELECT * FROM accounts WHERE username = ?", [username], (err, result) => {
             if (err) throw err;
@@ -101,7 +102,8 @@ app.post("/signin", (req, res) => {
             else {
                 const info = {
                     username: username,
-                    password: password
+                    password: password,
+                    email: email
                 }
                 connection.query("INSERT INTO accounts SET ?", [info], (err, result) => {
                     if (err) throw err;
