@@ -43,7 +43,7 @@ let players = [];
 require("./back/modules/index")(io, players);
 
 io.on("connection", (socket) => {
-    require("./back/modules/socket")(socket, games);
+    require("./back/modules/socket")(socket, games, connection);
 });
 
 // Arrivée sur l'accueil

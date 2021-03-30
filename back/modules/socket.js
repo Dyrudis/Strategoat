@@ -1,6 +1,6 @@
 const Pion = require("../models/pion");
 
-module.exports = function (socket, games) {
+module.exports = function (socket, games, connection) {
 
     // Début de la partie
     socket.on("start game", (player1, player2) => {
@@ -149,11 +149,47 @@ module.exports = function (socket, games) {
             console.log(winner.username + " gagne !");
 
             games.getGame(username).finished = true;
-            
+
+            // Calcul du nouvel elo :
+            let EloRating = require('elo-rating');
+            let winnerName = winner.username;
+            let loserName = games.getOpponent(winnerName).username;
+            connection.query("SELECT elo FROM accounts WHERE username = ?", [winnerName], (err, result) => {
+                if (err) throw err;
+                let winnerElo = result[0].elo;
+                connection.query("SELECT elo FROM accounts WHERE username = ?", [loserName], (err, result) => {
+                    if (err) throw err;
+                    let loserElo = result[0].elo;
+
+                    console.log(winnerElo, loserElo);
+
+                    newElo = EloRating.calculate(winnerElo, loserElo, true, 30);
+
+                    connection.query("UPDATE accounts SET elo = ? WHERE username = ?", [newElo.playerRating, winnerName], (err, result) => {
+                        if (err) throw err;
+                    });
+
+                    connection.query("UPDATE accounts SET elo = ? WHERE username = ?", [newElo.opponentRating, loserName], (err, result) => {
+                        if (err) throw err;
+                    });
+                });
+            });
+
+            connection.query("UPDATE accounts SET gamePlayed = gamePlayed + 1 WHERE username = ?", [winnerName], (err, result) => {
+                if (err) throw err;
+            });
+            connection.query("UPDATE accounts SET gameWon = gameWon + 1 WHERE username = ?", [winnerName], (err, result) => {
+                if (err) throw err;
+            });            
+            connection.query("UPDATE accounts SET gamePlayed = gamePlayed + 1 WHERE username = ?", [loserName], (err, result) => {
+                if (err) throw err;
+            });
+
+
             // On envoie le tableau (révélation des cases adverses)
             socket.emit("end", games.getTab(username));
             socket.to(games.getOpponent(username).id).emit("end", games.getTab(games.getOpponent(username).username));
-            
+
             // Notification par message
             socket.emit("message", "Partie terminé, " + winner.username + " remporte la victoire !", "green");
             socket.to(games.getOpponent(username).id).emit("message", "Partie terminé, " + winner.username + " remporte la victoire !", "green");

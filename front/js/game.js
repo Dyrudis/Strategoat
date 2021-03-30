@@ -212,6 +212,7 @@ function displayTab(tab) {
             if (tab[x][y] != undefined && tab[x][y] != -1 && tab[x][y] != 0) {
                 td.setAttribute("draggable", true);
                 td.setAttribute("ondragstart", "dragstart(event)");
+                td.innerHTML = tab[x][y];
                 td.removeAttribute("ondragover");
                 td.removeAttribute("ondrop");
             }
@@ -220,12 +221,14 @@ function displayTab(tab) {
             else if (tab[x][y] == 0 || tab[x][y] == -1) {
                 td.removeAttribute("draggable");
                 td.removeAttribute("ondragstart");
+                td.innerHTML = "";
                 td.setAttribute("ondragover", "dragover(event)");
                 td.setAttribute("ondrop", "dropGame(event)");
             }
 
             // Case lac (aucune intéraction possible)
             else {
+                td.innerHTML = "";
                 td.removeAttribute("draggable");
                 td.removeAttribute("ondragstart");
                 td.removeAttribute("ondragover");
