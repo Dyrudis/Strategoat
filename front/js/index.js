@@ -3,13 +3,17 @@ let socket = io();
 
 // Variables liées à la session
 let session = {
-    username: undefined
+    username: undefined,
+    gamePlayed: undefined,
+    gameWon: undefined,
+    elo: undefined,
 }
+
+let connectedPlayers = [];
 
 // Liste des joueurs qui attendent une réponse à leur invitation
 let invites = [];
 
-let usernameP = document.getElementById("username");
 let playerList = document.getElementById("playerList");
 let foundDiv = document.getElementById("found");
 
@@ -17,31 +21,28 @@ let foundDiv = document.getElementById("found");
 socket.emit("load home");
 
 // Le serveur nous renvoie les informations correspondantes
-socket.on("load home", username => {
+socket.on("load home", (username, gamePlayed, gameWon, elo) => {
     // On récupére les informations de session envoyées par le serveur
     session.username = username;
+    session.gamePlayed = gamePlayed;
+    session.gameWon = gameWon;
+    session.elo = elo;
 
     // Affichage du nom de l'utilisateur sur la page
-    usernameP.innerHTML = session.username;
+    document.getElementById("username").innerHTML = session.username;
+    document.getElementById("elo").innerHTML = "Elo : " + elo;
+    document.getElementById("gamePlayed").innerHTML = "Parties jouées : " + gamePlayed;
+    if (gamePlayed == 0) {
+        document.getElementById("winRate").innerHTML = "Winrate : Pas de donnée";
+    }
+    else {
+        document.getElementById("winRate").innerHTML = "Winrate : " + Math.round(gameWon / gamePlayed * 100) + "%";
+    }
 });
 
 // Lorsqu'un joueur se connecte ou se déconnecte
-socket.on("refresh players", players => {
-    playerList.innerHTML = "<p>Joueurs connectés (clique sur un joueur pour lui envoyer une invitation):</p>";
-    players.forEach(player => {
-        // On affiche le nom de tous les joueurs connectés sauf l'utilisateur
-        if (player.username != session.username) {
-            let li = document.createElement("li");
-            li.innerHTML = player.username;
-
-            // Envoie une invation au joueur sur lequel l'utilisateur clique
-            li.addEventListener("click", () => {
-                socket.emit("send invite", player.username);
-            });
-
-            playerList.appendChild(li);
-        }
-    });
+socket.on("refresh players", users => {
+    displayPlayers(users);
 });
 
 // Lorsque l'utilisateur reçoit une invitation
@@ -87,3 +88,40 @@ socket.on("found", opponentName => {
     socket.emit("session variable", "game", "oui");
     setTimeout(() => window.location.href = "/", 3000);
 });
+
+function displayPlayers(tab) {
+    document.getElementById("playerList").innerHTML = "";
+    tab.forEach((player) => {
+        if (player.username != session.username) {
+            let tr = document.createElement("tr");
+
+            let td = document.createElement("td");
+            td.innerHTML = player.username;
+            tr.appendChild(td);
+
+            td = document.createElement("td");
+            button = document.createElement("button");
+            button.onclick = () => { socket.emit("send invite", player.username) };
+            button.innerHTML = player.status;
+            if (player.status != "Online") {
+                button.setAttribute("disabled", true);
+            }
+            td.appendChild(button);
+            tr.appendChild(td);
+
+            td = document.createElement("td")
+            td.innerHTML = player.elo;
+            tr.appendChild(td);
+
+            td = document.createElement("td")
+            td.innerHTML = player.gamePlayed;
+            tr.appendChild(td);
+
+            td = document.createElement("td")
+            td.innerHTML = player.gameWon;
+            tr.appendChild(td);
+
+            document.getElementById("playerList").append(tr);
+        }
+    });
+}

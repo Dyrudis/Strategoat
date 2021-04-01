@@ -101,10 +101,9 @@ class Stratego {
         }
         //verification unite deplacable
         if (this.tab[x1][y1].id == 11 || this.tab[x1][y1].id == 12) {
-            console.log("Le drapeau ainsi que les bombes sont indeplacables.");
             return {
                 success: false,
-                message: "Deplacement non-legal."
+                message: "Le drapeau ainsi que les bombes sont indeplacables."
             };
         }
         //verification deplacement legal

@@ -36,7 +36,8 @@ let self = module.exports = {
     // Fonction qui renvoie le joueur ayant le nom username
     getPlayer: (username) => {
         let game = self.getGame(username);
-        return game.players[0].username == username ? game.players[0] : game.players[1];
+        if (game != undefined)
+            return game.players[0].username == username ? game.players[0] : game.players[1];
     },
 
     // Fonction qui renvoie l'adversaire du joueur ayant le nom username
@@ -79,6 +80,16 @@ let self = module.exports = {
         }
 
         return clientTab;
+    },
+
+    getPions: (username) => {
+        let game = self.getGame(username).game;
+        if (self.getPlayerNumber(username) == 0) {
+            return game.pionCount;
+        }
+        else {
+            return game.pionCount.slice().reverse();
+        }
     },
 
     play: (username, x1, y1, x2, y2) => {

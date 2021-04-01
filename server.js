@@ -9,6 +9,7 @@ const session = require("express-session")({
 const sharedSession = require("express-socket.io-session");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
+const sha256 = require('hash.js/lib/hash/sha/256');
 const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
@@ -34,17 +35,10 @@ io.use(sharedSession(session, {
     autoSave: true
 }));
 
-
 const games = require("./back/modules/game");
+const connections = require("./back/modules/connection");
 
-// Liste des joueurs connectés
-let players = [];
-
-require("./back/modules/index")(io, players);
-
-io.on("connection", (socket) => {
-    require("./back/modules/socket")(socket, games, connection);
-});
+require("./back/modules/socket")(io, games, connection, connections);
 
 // Arrivée sur l'accueil
 app.get("/", (req, res) => {
@@ -66,12 +60,15 @@ app.get("/", (req, res) => {
 app.post("/signin", (req, res) => {
     if (req.session.username == undefined) {
         const username = req.body.username;
-        const password = req.body.password;
+        const password = sha256().update(req.body.password).digest('hex');
         if (username && password) {
-            connection.query("SELECT * FROM accounts WHERE username = ? AND password = ?", [username, password], (err, result) => {
+            connection.query("SELECT * FROM accounts WHERE BINARY username = ? AND BINARY password = ?", [username, password], (err, result) => {
                 if (err) throw err;
                 if (result.length > 0) {
                     req.session.username = username;
+                    req.session.gamePlayed = result[0].gamePlayed;
+                    req.session.gameWon = result[0].gameWon;
+                    req.session.elo = result[0].elo;
                     res.redirect("/");
                 }
                 else {
@@ -91,7 +88,7 @@ app.post("/signin", (req, res) => {
 // Création d'un nouveau compte
 app.post("/signup", (req, res) => {
     const username = req.body.username;
-    const password = req.body.password;
+    const password = sha256().update(req.body.password).digest('hex');
     const email = req.body.email;
     if (username && password) {
         connection.query("SELECT * FROM accounts WHERE username = ?", [username], (err, result) => {
@@ -108,6 +105,7 @@ app.post("/signup", (req, res) => {
                 connection.query("INSERT INTO accounts SET ?", [info], (err, result) => {
                     if (err) throw err;
                 });
+                connections.newPlayer(username);
                 req.session.username = username;
                 res.redirect("/");
             }
@@ -122,6 +120,12 @@ app.post("/signup", (req, res) => {
 app.post("/logout", (req, res) => {
     req.session.destroy();
     res.redirect("/");
+});
+
+connection.query("SELECT username FROM accounts", (err, result) => {
+    if (err) throw err;
+
+    connections.init(result);
 });
 
 const port = process.env.PORT || 4200;

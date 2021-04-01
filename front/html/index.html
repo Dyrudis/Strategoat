@@ -11,16 +11,38 @@
 
 <body>
     <h1>Strategoat</h1>
-    <p id="username"></p>
-    <ul id="playerList">
-    </ul>
+    <div id="info">
+        <p id="username"></p>
+        <form action="logout" method="POST" id="logout">
+            <input type="submit" value="Se déconnecter" id="disconnect">
+        </form>
+        <select name="civ" id="civ">
+            <option value="default">Civilisation</option>
+            <option value="greek" disabled>Grecque</option>
+            <option value="egypt" disabled>Egypte</option>
+            <option value="nordique" disabled>Nordique</option>
+            <option value="monde" disabled>Monde</option>
+        </select>
+        <p id="elo"></p>
+        <p id="gamePlayed"></p>
+        <p id="winRate"></p>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <td>Nom</td>
+                <td>Etat</td>
+                <td>Elo</td>
+                <td>Parties jouées</td>
+                <td>Parties gagnées</td>
+            </tr>
+        </thead>
+        <tbody id="playerList"></tbody>
+    </table>
     <div id="found">
         <h2>Partie trouvée !</h2>
         <h3>Adversaire : </h3>
     </div>
-    <form action="logout" method="POST">
-        <input type="submit" value="Se déconnecter">
-    </form>
     <script src="js/index.js"></script>
 </body>
 

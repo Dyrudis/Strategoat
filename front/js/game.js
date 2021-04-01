@@ -4,13 +4,16 @@ socket.emit("load game");
 
 // Création de la liste
 const names = namesList["default"];
-addToList(12, names[12]);
+addToList(12, names[12], "self");
+addToList("&12", names[12], "opponent");
 for (let i = 10; i > 0; i--) {
-    addToList(i, names[i]);
+    addToList(i, names[i], "self");
+    addToList(`&${i}`, names[i], "opponent");
 }
-addToList(11, names[11]);
+addToList(11, names[11], "self");
+addToList("&11", names[11], "opponent");
 
-function addToList(value, name) {
+function addToList(value, name, divId) {
     let div = document.createElement("div");
     div.setAttribute("draggable", true);
     div.setAttribute("ondragstart", "dragstart(event)");
@@ -22,7 +25,7 @@ function addToList(value, name) {
     span.classList.add("count");
     div.appendChild(span);
 
-    document.getElementById("pions").appendChild(div);
+    document.getElementById(divId).appendChild(div);
 }
 
 // Création du tableau
@@ -65,21 +68,22 @@ let pionCount = {
 
 function autoFill() {
     tab = [
-        [11, 4, 11, 12],
-        [2, 3, 4, 10],
-        [2, 3, 7, 9],
-        [5, 6, 11, 8],
-        [2, 4, 2, 7],
-        [11, 3, 2, 6],
-        [5, 6, 11, 5],
-        [6, 7, 8, 4],
-        [2, 3, 1, 3],
-        [11, 5, 2, 2]
+        [11, 4, 11, 12, 0, 0, 0, 0, 0, 0],
+        [2, 3, 4, 10, 0, 0, 0, 0, 0, 0],
+        [2, 3, 7, 9, null, null, 0, 0, 0, 0],
+        [5, 6, 11, 8, null, null, 0, 0, 0, 0],
+        [2, 4, 2, 7, 0, 0, 0, 0, 0, 0],
+        [11, 3, 2, 6, 0, 0, 0, 0, 0, 0],
+        [5, 6, 11, 5, null, null, 0, 0, 0, 0],
+        [6, 7, 8, 4, null, null, 0, 0, 0, 0],
+        [2, 3, 1, 3, 0, 0, 0, 0, 0, 0],
+        [11, 5, 2, 2, 0, 0, 0, 0, 0, 0]
     ]
 
     for (const key in pionCount) {
         pionCount[key] = 0;
     }
+
     // Affichage client
     displayTab(tab);
     displayPionCount(pionCount);
@@ -88,13 +92,81 @@ function autoFill() {
 }
 
 function displayPionCount(pionCount) {
-    for (const key in pionCount) {
-        const count = pionCount[key];
-        document.querySelector("div[data-pion=\"" + key + "\"] span.count").innerHTML = "\ : " + count;
+    if (Array.isArray(pionCount)) {
+        for (const key in pionCount[0]) {
+            const count = pionCount[0][key];
+            document.querySelector("div[data-pion=\"" + key + "\"] span.count").innerHTML = "\ : " + count;
+        }
+
+        for (const key in pionCount[1]) {
+            const count = pionCount[1][key];
+            document.querySelector("div[data-pion=\"&" + key + "\"] span.count").innerHTML = "\ : " + count;
+        }
+    }
+
+    else {
+        for (const key in pionCount) {
+            const count = pionCount[key];
+            document.querySelector("div[data-pion=\"" + key + "\"] span.count").innerHTML = "\ : " + count;
+        }
     }
 }
 
-displayPionCount();
+displayPionCount(pionCount);
+
+function displayTab(tab) {
+    for (let x = 0; x < 10; x++) {
+        for (let y = 0; y < 10; y++) {
+            let td = document.querySelector("[data-column=\"" + x + "\"][data-row=\"" + y + "\"]");
+            td.setAttribute("data-pion", tab[x][y]);
+
+            // Case pion possédé
+            if (tab[x][y] != undefined && tab[x][y] != -1 && tab[x][y] != 0) {
+                td.setAttribute("draggable", true);
+                td.setAttribute("ondragstart", "dragstart(event)");
+                td.innerHTML = (tab[x][y][0] == "&" ? tab[x][y].toString().split("&")[1] : tab[x][y]);
+                td.removeAttribute("ondragover");
+                td.removeAttribute("ondrop");
+            }
+
+            // Case vide ou pion adverse
+            else if (tab[x][y] == 0 || tab[x][y] == -1) {
+                td.removeAttribute("draggable");
+                td.removeAttribute("ondragstart");
+                td.innerHTML = "";
+                td.setAttribute("ondragover", "dragover(event)");
+                td.setAttribute("ondrop", "dropGame(event)");
+            }
+
+            // Case lac (aucune intéraction possible)
+            else {
+                td.innerHTML = "";
+                td.removeAttribute("draggable");
+                td.removeAttribute("ondragstart");
+                td.removeAttribute("ondragover");
+                td.removeAttribute("ondrop");
+            }
+        }
+    }
+}
+
+function toggleNumber() {
+    td = document.querySelectorAll("#stratego td");
+    if (td[0].style.color == "") {
+        sendToChat("Valeurs affichées.", "green");
+        td.forEach(elem => {
+            elem.style.color = "white";
+            elem.style.webkitTextStroke = "2px black";
+        });
+    }
+    else {
+        sendToChat("Valeurs cachées.", "green");
+        td.forEach(elem => {
+            elem.style.color = "";
+            elem.style.webkitTextStroke = "0";
+        });
+    }
+}
 
 // Drag and Drop
 function dragstart(e) {
@@ -169,7 +241,7 @@ function drop(e) {
         sendToChat("Vous ne pouvez pas écraser une unité existante.", "red");
     }
 
-    displayPionCount();
+    displayPionCount(pionCount);
 
     if (isPlacementFinished()) {
         document.getElementById("ready").disabled = false;
@@ -202,42 +274,6 @@ function isPlacementFinished() {
     return !Object.values(pionCount).some(elem => elem != 0);
 }
 
-function displayTab(tab) {
-    for (let x = 0; x < 10; x++) {
-        for (let y = 0; y < 10; y++) {
-            let td = document.querySelector("[data-column=\"" + x + "\"][data-row=\"" + y + "\"]");
-            td.setAttribute("data-pion", tab[x][y]);
-
-            // Case pion possédé
-            if (tab[x][y] != undefined && tab[x][y] != -1 && tab[x][y] != 0) {
-                td.setAttribute("draggable", true);
-                td.setAttribute("ondragstart", "dragstart(event)");
-                td.innerHTML = tab[x][y];
-                td.removeAttribute("ondragover");
-                td.removeAttribute("ondrop");
-            }
-
-            // Case vide ou pion adverse
-            else if (tab[x][y] == 0 || tab[x][y] == -1) {
-                td.removeAttribute("draggable");
-                td.removeAttribute("ondragstart");
-                td.innerHTML = "";
-                td.setAttribute("ondragover", "dragover(event)");
-                td.setAttribute("ondrop", "dropGame(event)");
-            }
-
-            // Case lac (aucune intéraction possible)
-            else {
-                td.innerHTML = "";
-                td.removeAttribute("draggable");
-                td.removeAttribute("ondragstart");
-                td.removeAttribute("ondragover");
-                td.removeAttribute("ondrop");
-            }
-        }
-    }
-}
-
 document.getElementById("ready").addEventListener("click", e => {
     if (ready) {
         socket.emit("not ready");
@@ -259,6 +295,12 @@ document.getElementById("chatForm").addEventListener("submit", e => {
                 break;
             case "autofill":
                 autoFill();
+                break;
+            case "number":
+                toggleNumber();
+                break;
+            case "help":
+                sendToChat("Liste des commandes :<br/>/autofill : remplissage automatique du tableau<br/>/ff : abandon<br/>/number : affiche/enleve les valeurs des pions<br/>/help : demander de l'aide");
                 break;
             default:
                 sendToChat("Commande inconnue.");
@@ -298,26 +340,38 @@ socket.on("start", (tab, pionCount) => {
     displayTab(tab);
 
     document.getElementById("ready").remove();
-    [...document.getElementById("pions").children].forEach(child => {
+    [...document.getElementById("self").children].forEach(child => {
         child.removeAttribute("draggable");
         child.removeAttribute("ondragstart");
     });
+    [...document.getElementById("opponent").children].forEach(child => {
+        child.removeAttribute("draggable");
+        child.removeAttribute("ondragstart");
+    });
+    document.getElementById("opponent").style.display = "flex";
+    document.getElementById("pions").style.flexDirection = "row";
 });
 
 // Mise à jour du plateau de jeu
 socket.on("update tab", (tab, pionCount) => {
     displayTab(tab);
+    console.log(pionCount)
     displayPionCount(pionCount);
 });
 
 // Après un reload de la page
 socket.on("reload tab", (tab, pionCount) => {
     document.getElementById("ready").remove();
-    [...document.getElementById("pions").children].forEach(child => {
+    [...document.getElementById("self").children].forEach(child => {
         child.removeAttribute("draggable");
         child.removeAttribute("ondragstart");
-        child.style.cursor = "default";
     });
+    [...document.getElementById("opponent").children].forEach(child => {
+        child.removeAttribute("draggable");
+        child.removeAttribute("ondragstart");
+    });
+    document.getElementById("opponent").style.display = "flex";
+    document.getElementById("pions").style.flexDirection = "row";
     displayTab(tab);
     displayPionCount(pionCount);
 });
@@ -325,16 +379,6 @@ socket.on("reload tab", (tab, pionCount) => {
 socket.on("end", (tab, pionCount) => {
     displayTab(tab);
     displayPionCount(pionCount);
-
-    // Bouton retour au menu
-    let button = document.createElement("button");
-    button.innerHTML = "Revenir au lobby";
-    button.addEventListener("click", () => {
-        document.location.reload();
-    });
-    let messages = document.getElementById("messages");
-    messages.appendChild(button);
-    messages.scrollTop = messages.scrollHeight;
 
     socket.emit("session variable", "game", undefined);
 });

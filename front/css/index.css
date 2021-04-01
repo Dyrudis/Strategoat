@@ -1,3 +1,71 @@
+body {
+	font-family: 'Montserrat', sans-serif;
+}
+
+h1 {
+    text-align: center;
+	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	font-size: 50px;
+}
+
+#info {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 200px;
+    height: 275px;
+    background-color: rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 10px;
+    padding: 0 0 20px 0;
+    font-size: 1.1em;
+}
+
+#info p {
+    margin: 0;
+}
+
+#username {
+    font-weight: bold; font-size: 1.5em
+}
+
+#logout {
+    margin-top: -20px;
+}
+
+#logout input {
+    font-size: 0.6em;
+    height: 25px;
+}
+
+#civ {
+    height: 30px;
+}
+
+#disconnect {
+    height: 30px;
+}
+
+table {
+    border-collapse: collapse;
+    margin: auto;
+    text-align: center;
+}
+
+thead {
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.25);
+}
+
+td {
+    border: 1px solid black;
+    padding: 5px;
+    width: 100px;
+}
+
 #cancel {
     display: none;
 }
