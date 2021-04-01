@@ -48,7 +48,7 @@ module.exports = (io, players) => {
             }
         });
 
-        socket.on("add session variable", (name, value) => {
+        socket.on("session variable", (name, value) => {
             socket.handshake.session[name] = value;
         });
 

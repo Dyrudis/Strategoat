@@ -193,6 +193,9 @@ module.exports = function (socket, games, connection) {
             // Notification par message
             socket.emit("message", "Partie terminé, " + winner.username + " remporte la victoire !", "green");
             socket.to(games.getOpponent(username).id).emit("message", "Partie terminé, " + winner.username + " remporte la victoire !", "green");
+
+            // On met fin à la partie
+            games.delete(username);
         }
         // Le tour s'est bien déroulé
         else {

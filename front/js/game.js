@@ -325,4 +325,16 @@ socket.on("reload tab", (tab, pionCount) => {
 socket.on("end", (tab, pionCount) => {
     displayTab(tab);
     displayPionCount(pionCount);
+
+    // Bouton retour au menu
+    let button = document.createElement("button");
+    button.innerHTML = "Revenir au lobby";
+    button.addEventListener("click", () => {
+        document.location.reload();
+    });
+    let messages = document.getElementById("messages");
+    messages.appendChild(button);
+    messages.scrollTop = messages.scrollHeight;
+
+    socket.emit("session variable", "game", undefined);
 });

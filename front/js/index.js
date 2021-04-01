@@ -84,6 +84,6 @@ socket.on("get invite", player => {
 socket.on("found", opponentName => {
     foundDiv.style.display = "block";
     document.querySelector("#found h3").innerHTML = `Adversaire : ${opponentName} !`;
-    socket.emit("add session variable", "game", "oui");
+    socket.emit("session variable", "game", "oui");
     setTimeout(() => window.location.href = "/", 3000);
 });
