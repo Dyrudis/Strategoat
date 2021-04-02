@@ -122,9 +122,9 @@ app.post("/logout", (req, res) => {
     res.redirect("/");
 });
 
+// Au lancement du serveur on récupère les informations des comptes déjà existants
 connection.query("SELECT username FROM accounts", (err, result) => {
     if (err) throw err;
-
     connections.init(result);
 });
 

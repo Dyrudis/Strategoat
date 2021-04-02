@@ -2,55 +2,10 @@
 let socket = io();
 socket.emit("load game");
 
-// Création de la liste
-const names = namesList["default"];
-addToList(12, names[12], "self");
-addToList("&12", names[12], "opponent");
-for (let i = 10; i > 0; i--) {
-    addToList(i, names[i], "self");
-    addToList(`&${i}`, names[i], "opponent");
-}
-addToList(11, names[11], "self");
-addToList("&11", names[11], "opponent");
-
-function addToList(value, name, divId) {
-    let div = document.createElement("div");
-    div.setAttribute("draggable", true);
-    div.setAttribute("ondragstart", "dragstart(event)");
-    div.setAttribute("data-pion", value);
-    div.classList.add("pion");
-    div.innerHTML = name;
-
-    let span = document.createElement("span");
-    span.classList.add("count");
-    div.appendChild(span);
-
-    document.getElementById(divId).appendChild(div);
-}
-
-// Création du tableau
-for (let y = 9; y >= 0; y--) {
-    let tr = document.createElement("tr");
-    for (let x = 0; x < 10; x++) {
-        let td = document.createElement("td");
-        td.classList.add("case");
-        td.setAttribute("data-row", y);
-        td.setAttribute("data-column", x);
-        td.setAttribute("data-pion", 0);
-        td.setAttribute("ondrop", "drop(event)");
-        td.setAttribute("ondragover", "dragover(event)");
-        if ([2, 3, 6, 7].includes(x) && [4, 5].includes(y)) {
-            td.setAttribute("data-pion", null);
-            td.removeAttribute("ondrop");
-            td.removeAttribute("ondragover");
-        }
-        tr.appendChild(td);
-    }
-    document.getElementById("stratego").appendChild(tr);
-}
-
+/*---------------------*\
+|   Variables locales   |
+\*---------------------*/
 let tab = Array(10).fill().map(() => Array(4).fill(0));
-let ready = false;
 let pionCount = {
     "12": 1,
     "10": 1,
@@ -64,111 +19,315 @@ let pionCount = {
     "2": 8,
     "1": 1,
     "11": 6
-}
+};
 
-function autoFill() {
-    tab = [
-        [11, 4, 11, 12, 0, 0, 0, 0, 0, 0],
-        [2, 3, 4, 10, 0, 0, 0, 0, 0, 0],
-        [2, 3, 7, 9, null, null, 0, 0, 0, 0],
-        [5, 6, 11, 8, null, null, 0, 0, 0, 0],
-        [2, 4, 2, 7, 0, 0, 0, 0, 0, 0],
-        [11, 3, 2, 6, 0, 0, 0, 0, 0, 0],
-        [5, 6, 11, 5, null, null, 0, 0, 0, 0],
-        [6, 7, 8, 4, null, null, 0, 0, 0, 0],
-        [2, 3, 1, 3, 0, 0, 0, 0, 0, 0],
-        [11, 5, 2, 2, 0, 0, 0, 0, 0, 0]
-    ]
+// Protection
+(function () {
 
-    for (const key in pionCount) {
-        pionCount[key] = 0;
+    let ready = false;
+
+    /*----------------------------------*\
+    |   Création de la liste des pions   |
+    \*----------------------------------*/
+    const names = namesList["default"];
+    addToList(12, names[12], "self");
+    addToList("&12", names[12], "opponent");
+    for (let i = 10; i > 0; i--) {
+        addToList(i, names[i], "self");
+        addToList(`&${i}`, names[i], "opponent");
+    }
+    addToList(11, names[11], "self");
+    addToList("&11", names[11], "opponent");
+
+    function addToList(value, name, divId) {
+        let div = document.createElement("div");
+        div.setAttribute("draggable", true);
+        div.setAttribute("ondragstart", "dragstart(event)");
+        div.setAttribute("data-pion", value);
+        div.classList.add("pion");
+        div.innerHTML = name;
+
+        let span = document.createElement("span");
+        span.classList.add("count");
+        div.appendChild(span);
+
+        document.getElementById(divId).appendChild(div);
     }
 
-    // Affichage client
-    displayTab(tab);
     displayPionCount(pionCount);
 
-    document.getElementById("ready").disabled = false;
-}
+    /*------------------------------*\
+    |   Création du tableau de jeu   |
+    \*------------------------------*/
+    for (let y = 9; y >= 0; y--) {
+        let tr = document.createElement("tr");
+        for (let x = 0; x < 10; x++) {
+            let td = document.createElement("td");
+            td.classList.add("case");
+            td.setAttribute("data-row", y);
+            td.setAttribute("data-column", x);
+            td.setAttribute("data-pion", 0);
+            td.setAttribute("ondrop", "drop(event)");
+            td.setAttribute("ondragover", "dragover(event)");
+            if ([2, 3, 6, 7].includes(x) && [4, 5].includes(y)) {
+                td.setAttribute("data-pion", null);
+                td.removeAttribute("ondrop");
+                td.removeAttribute("ondragover");
+            }
+            tr.appendChild(td);
+        }
+        document.getElementById("stratego").appendChild(tr);
+    }
 
-function displayPionCount(pionCount) {
-    if (Array.isArray(pionCount)) {
-        for (const key in pionCount[0]) {
-            const count = pionCount[0][key];
-            document.querySelector("div[data-pion=\"" + key + "\"] span.count").innerHTML = "\ : " + count;
+    // Actualise la liste des pions restants
+    function displayPionCount(pionCount) {
+        if (Array.isArray(pionCount)) {
+            for (const key in pionCount[0]) {
+                const count = pionCount[0][key];
+                document.querySelector("div[data-pion=\"" + key + "\"] span.count").innerHTML = "\ : " + count;
+            }
+
+            for (const key in pionCount[1]) {
+                const count = pionCount[1][key];
+                document.querySelector("div[data-pion=\"&" + key + "\"] span.count").innerHTML = "\ : " + count;
+            }
         }
 
-        for (const key in pionCount[1]) {
-            const count = pionCount[1][key];
-            document.querySelector("div[data-pion=\"&" + key + "\"] span.count").innerHTML = "\ : " + count;
+        else {
+            for (const key in pionCount) {
+                const count = pionCount[key];
+                document.querySelector("div[data-pion=\"" + key + "\"] span.count").innerHTML = "\ : " + count;
+            }
         }
     }
 
-    else {
+    // Actualise le tableau de jeu
+    function displayTab(tab) {
+        for (let x = 0; x < 10; x++) {
+            for (let y = 0; y < 10; y++) {
+                let td = document.querySelector("[data-column=\"" + x + "\"][data-row=\"" + y + "\"]");
+                td.setAttribute("data-pion", tab[x][y]);
+
+                // Case pion possédé
+                if (tab[x][y] != undefined && tab[x][y] != -1 && tab[x][y] != 0) {
+                    td.setAttribute("draggable", true);
+                    td.setAttribute("ondragstart", "dragstart(event)");
+                    td.innerHTML = (tab[x][y][0] == "&" ? tab[x][y].toString().split("&")[1] : tab[x][y]);
+                    if (ready) {
+                        td.removeAttribute("ondragover")
+                        td.removeAttribute("ondrop");
+                    }
+                    else {
+                        td.setAttribute("ondragover", "dragover(event)");
+                        td.setAttribute("ondrop", "drop(event)");
+                    }
+                }
+
+                // Case vide ou pion adverse
+                else if (tab[x][y] == 0 || tab[x][y] == -1) {
+                    td.removeAttribute("draggable");
+                    td.removeAttribute("ondragstart");
+                    td.innerHTML = "";
+                    td.setAttribute("ondragover", "dragover(event)");
+                    td.setAttribute("ondrop", "dropGame(event)");
+                }
+
+                // Case lac (aucune intéraction possible)
+                else {
+                    td.innerHTML = "";
+                    td.removeAttribute("draggable");
+                    td.removeAttribute("ondragstart");
+                    td.removeAttribute("ondragover");
+                    td.removeAttribute("ondrop");
+                }
+            }
+        }
+    }
+
+    // Permet l'affichage d'un message dans le tchat
+    function sendToChat(message, color = "black") {
+        let li = document.createElement("li");
+        li.innerHTML = message;
+        li.style.color = color;
+        let messages = document.getElementById("messages");
+        messages.appendChild(li);
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    // Commande /autofill (disponible uniquement avant le début de la partie) :
+    function autoFill() {
+        if (ready) {
+            sendToChat("Impossible actuellement.", "red");
+            return
+        }
+        tab = [
+            [11, 4, 11, 12, 0, 0, 0, 0, 0, 0],
+            [2, 3, 4, 10, 0, 0, 0, 0, 0, 0],
+            [2, 3, 7, 9, null, null, 0, 0, 0, 0],
+            [5, 6, 11, 8, null, null, 0, 0, 0, 0],
+            [2, 4, 2, 7, 0, 0, 0, 0, 0, 0],
+            [11, 3, 2, 6, 0, 0, 0, 0, 0, 0],
+            [5, 6, 11, 5, null, null, 0, 0, 0, 0],
+            [6, 7, 8, 4, null, null, 0, 0, 0, 0],
+            [2, 3, 1, 3, 0, 0, 0, 0, 0, 0],
+            [11, 5, 2, 2, 0, 0, 0, 0, 0, 0]
+        ]
+
         for (const key in pionCount) {
-            const count = pionCount[key];
-            document.querySelector("div[data-pion=\"" + key + "\"] span.count").innerHTML = "\ : " + count;
+            pionCount[key] = 0;
+        }
+
+        // Affichage client
+        displayTab(tab);
+        displayPionCount(pionCount);
+
+        document.getElementById("ready").disabled = false;
+    }
+
+    // Commande /number
+    function toggleNumber() {
+        td = document.querySelectorAll("#stratego td");
+        if (td[0].style.color == "") {
+            sendToChat("Valeurs affichées.", "green");
+            td.forEach(elem => {
+                if (!elem.getAttribute("data-pion").includes("11") && !elem.getAttribute("data-pion").includes("12")) {
+                    elem.style.color = "white";
+                    elem.style.webkitTextStroke = "2px black";
+                }
+            });
+        }
+        else {
+            sendToChat("Valeurs cachées.", "green");
+            td.forEach(elem => {
+                if (!elem.getAttribute("data-pion").includes("11") && !elem.getAttribute("data-pion").includes("12")) {
+                    elem.style.color = "";
+                    elem.style.webkitTextStroke = "0";
+                }
+            });
         }
     }
-}
 
-displayPionCount(pionCount);
+    // Envoie d'un message dans le tchat
+    document.getElementById("chatForm").addEventListener("submit", e => {
+        e.preventDefault();
+        let message = document.getElementById("message");
 
-function displayTab(tab) {
-    for (let x = 0; x < 10; x++) {
-        for (let y = 0; y < 10; y++) {
-            let td = document.querySelector("[data-column=\"" + x + "\"][data-row=\"" + y + "\"]");
-            td.setAttribute("data-pion", tab[x][y]);
-
-            // Case pion possédé
-            if (tab[x][y] != undefined && tab[x][y] != -1 && tab[x][y] != 0) {
-                td.setAttribute("draggable", true);
-                td.setAttribute("ondragstart", "dragstart(event)");
-                td.innerHTML = (tab[x][y][0] == "&" ? tab[x][y].toString().split("&")[1] : tab[x][y]);
-                td.removeAttribute("ondragover");
-                td.removeAttribute("ondrop");
-            }
-
-            // Case vide ou pion adverse
-            else if (tab[x][y] == 0 || tab[x][y] == -1) {
-                td.removeAttribute("draggable");
-                td.removeAttribute("ondragstart");
-                td.innerHTML = "";
-                td.setAttribute("ondragover", "dragover(event)");
-                td.setAttribute("ondrop", "dropGame(event)");
-            }
-
-            // Case lac (aucune intéraction possible)
-            else {
-                td.innerHTML = "";
-                td.removeAttribute("draggable");
-                td.removeAttribute("ondragstart");
-                td.removeAttribute("ondragover");
-                td.removeAttribute("ondrop");
+        if (message.value[0] == "/") {
+            let command = message.value.substring(1);
+            switch (command) {
+                case "ff":
+                    sendToChat("Vous avez abandonné la partie.");
+                    break;
+                case "autofill":
+                    autoFill();
+                    break;
+                case "number":
+                    toggleNumber();
+                    break;
+                case "help":
+                    sendToChat("Liste des commandes :<br/>/autofill : remplissage automatique du tableau<br/>/ff : abandon<br/>/number : affiche/enleve les valeurs des pions<br/>/help : demander de l'aide");
+                    break;
+                default:
+                    sendToChat("Commande inconnue.");
+                    break;
             }
         }
-    }
-}
+        else if (message.value) {
+            socket.emit("message", message.value);
+        }
+        message.value = "";
+    });
 
-function toggleNumber() {
-    td = document.querySelectorAll("#stratego td");
-    if (td[0].style.color == "") {
-        sendToChat("Valeurs affichées.", "green");
-        td.forEach(elem => {
-            elem.style.color = "white";
-            elem.style.webkitTextStroke = "2px black";
-        });
-    }
-    else {
-        sendToChat("Valeurs cachées.", "green");
-        td.forEach(elem => {
-            elem.style.color = "";
-            elem.style.webkitTextStroke = "0";
-        });
-    }
-}
+    // Clique sur le bouton "Prêt"
+    document.getElementById("ready").addEventListener("click", e => {
+        if (ready) {
+            socket.emit("not ready");
+        }
+        else {
+            socket.emit("ready", tab);
+        }
+    });
 
-// Drag and Drop
+    /*-------------------------------------*\
+    |   Gestion des évènements du serveur   |
+    \*-------------------------------------*/
+    socket.on("message", (message, color, name) => {
+        if (name) {
+            message = name + " : " + message;
+        }
+        sendToChat(message, color);
+    });
+
+    socket.on("ready", () => {
+        ready = true;
+        document.getElementById("ready").innerHTML = "Pas prêt";
+        displayTab(tab);
+        sendToChat("Vous êtes prêt.", "green");
+    });
+
+    socket.on("not ready", () => {
+        ready = false;
+        document.getElementById("ready").innerHTML = "Prêt";
+        displayTab(tab);
+        sendToChat("Vous n'êtes plus prêt.", "green");
+    });
+
+    // Début de la partie
+    socket.on("start", (tab, pionCount) => {
+        sendToChat("Les deux joueurs sont prêts, la partie va commencer...", "green");
+        displayPionCount(pionCount);
+        displayTab(tab);
+
+        document.getElementById("ready").remove();
+        [...document.getElementById("self").children].forEach(child => {
+            child.removeAttribute("draggable");
+            child.removeAttribute("ondragstart");
+        });
+        [...document.getElementById("opponent").children].forEach(child => {
+            child.removeAttribute("draggable");
+            child.removeAttribute("ondragstart");
+        });
+        document.getElementById("opponent").style.display = "flex";
+        document.getElementById("pions").style.flexDirection = "row";
+    });
+
+    // Mise à jour du plateau de jeu et de la liste des pions restants
+    socket.on("update tab", (tab, pionCount) => {
+        displayTab(tab);
+        displayPionCount(pionCount);
+    });
+
+    // Après un reload de la page, on récupère les informations de la partie
+    socket.on("reload tab", (tab, pionCount) => {
+        ready = true;
+        document.getElementById("ready").remove();
+        [...document.getElementById("self").children].forEach(child => {
+            child.removeAttribute("draggable");
+            child.removeAttribute("ondragstart");
+        });
+        [...document.getElementById("opponent").children].forEach(child => {
+            child.removeAttribute("draggable");
+            child.removeAttribute("ondragstart");
+        });
+        document.getElementById("opponent").style.display = "flex";
+        document.getElementById("pions").style.flexDirection = "row";
+        displayTab(tab);
+        displayPionCount(pionCount);
+    });
+
+    // Fin de la partie
+    socket.on("end", (tab, pionCount) => {
+        displayTab(tab);
+        displayPionCount(pionCount);
+
+        socket.emit("session variable", "game", undefined);
+    });
+
+})()
+
+/*---------------------------*\
+|   Fonctions drag and drop   |
+\*---------------------------*/
 function dragstart(e) {
     e.dataTransfer.setData("text/plain", e.target.getAttribute("data-pion") + ":" + e.target.getAttribute("data-column") + ":" + e.target.getAttribute("data-row"));
 }
@@ -260,125 +419,3 @@ function dropGame(e) {
     let y2 = e.target.getAttribute("data-row");
     socket.emit("play", x, y, x2, y2);
 }
-
-function sendToChat(message, color = "black") {
-    let li = document.createElement("li");
-    li.innerHTML = message;
-    li.style.color = color;
-    let messages = document.getElementById("messages");
-    messages.appendChild(li);
-    messages.scrollTop = messages.scrollHeight;
-}
-
-function isPlacementFinished() {
-    return !Object.values(pionCount).some(elem => elem != 0);
-}
-
-document.getElementById("ready").addEventListener("click", e => {
-    if (ready) {
-        socket.emit("not ready");
-    }
-    else {
-        socket.emit("ready", tab);
-    }
-});
-
-document.getElementById("chatForm").addEventListener("submit", e => {
-    e.preventDefault();
-    let message = document.getElementById("message");
-
-    if (message.value[0] == "/") {
-        let command = message.value.substring(1);
-        switch (command) {
-            case "ff":
-                sendToChat("Vous avez abandonné la partie.");
-                break;
-            case "autofill":
-                autoFill();
-                break;
-            case "number":
-                toggleNumber();
-                break;
-            case "help":
-                sendToChat("Liste des commandes :<br/>/autofill : remplissage automatique du tableau<br/>/ff : abandon<br/>/number : affiche/enleve les valeurs des pions<br/>/help : demander de l'aide");
-                break;
-            default:
-                sendToChat("Commande inconnue.");
-                break;
-        }
-    }
-    else if (message.value) {
-        socket.emit("message", message.value);
-    }
-    message.value = "";
-});
-
-socket.on("message", (message, color, name) => {
-    if (name) {
-        message = name + " : " + message;
-    }
-    sendToChat(message, color);
-});
-
-socket.on("ready", () => {
-    ready = true;
-    document.getElementById("ready").innerHTML = "Pas prêt";
-    sendToChat("Vous êtes prêt.", "green");
-});
-
-socket.on("not ready", () => {
-    ready = false;
-    document.getElementById("ready").innerHTML = "Prêt";
-    sendToChat("Vous n'êtes plus prêt.", "green");
-});
-
-// Fin de la phase de préparation
-socket.on("start", (tab, pionCount) => {
-
-    sendToChat("Les deux joueurs sont prêts, la partie va commencer...", "green");
-    displayPionCount(pionCount);
-    displayTab(tab);
-
-    document.getElementById("ready").remove();
-    [...document.getElementById("self").children].forEach(child => {
-        child.removeAttribute("draggable");
-        child.removeAttribute("ondragstart");
-    });
-    [...document.getElementById("opponent").children].forEach(child => {
-        child.removeAttribute("draggable");
-        child.removeAttribute("ondragstart");
-    });
-    document.getElementById("opponent").style.display = "flex";
-    document.getElementById("pions").style.flexDirection = "row";
-});
-
-// Mise à jour du plateau de jeu
-socket.on("update tab", (tab, pionCount) => {
-    displayTab(tab);
-    console.log(pionCount)
-    displayPionCount(pionCount);
-});
-
-// Après un reload de la page
-socket.on("reload tab", (tab, pionCount) => {
-    document.getElementById("ready").remove();
-    [...document.getElementById("self").children].forEach(child => {
-        child.removeAttribute("draggable");
-        child.removeAttribute("ondragstart");
-    });
-    [...document.getElementById("opponent").children].forEach(child => {
-        child.removeAttribute("draggable");
-        child.removeAttribute("ondragstart");
-    });
-    document.getElementById("opponent").style.display = "flex";
-    document.getElementById("pions").style.flexDirection = "row";
-    displayTab(tab);
-    displayPionCount(pionCount);
-});
-
-socket.on("end", (tab, pionCount) => {
-    displayTab(tab);
-    displayPionCount(pionCount);
-
-    socket.emit("session variable", "game", undefined);
-});

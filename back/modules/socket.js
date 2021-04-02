@@ -24,10 +24,11 @@ module.exports = function (io, games, database, connections) {
             let session = socket.handshake.session;
 
             // Lors de la connexion à la page d'accueil, on envoie certaines informations à l'utilisateur
-            socket.emit("load home", session.username, session.gamePlayed, session.gameWon, session.elo);
+            socket.emit("load home", session.username);
 
             connections.setStatus(session.username, "Online");
             connections.setId(session.username, socket.id);
+            // Refresh de l'affichage des autres joueurs (pour voir les joueur connectés en temps réel)
             refresh(io, database, connections);
         })
 

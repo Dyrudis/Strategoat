@@ -146,40 +146,40 @@ html, body {
     background-color: white;
 }
 [data-pion="1"] {
-    background-image: url("../ressources/image/espion.png");
+    background-image: url("../ressources/image/greek/1.png");
 }
 [data-pion="2"] {
-    background-image:url("../ressources/image/hermes.jpg");
+    background-image: url("../ressources/image/greek/2.jpg");
 }
 [data-pion="3"] {
-    background-image:url("../ressources/image/hephamachintruc.jpg");
+    background-image: url("../ressources/image/greek/3.jpg");
 }
 [data-pion="4"] {
-    background-image:url("../ressources/image/casquev2.jpg");
+    background-image: url("../ressources/image/greek/4.jpg");
 }
 [data-pion="5"] {
-    background-image:url("../ressources/image/casque.jpg");
+    background-image: url("../ressources/image/greek/5.jpg");
 }
 [data-pion="6"] {
-    background-image:url("../ressources/image/centaure.jpg");
+    background-image: url("../ressources/image/greek/6.jpg");
 }
 [data-pion="7"] {
-    background-image:url("../ressources/image/minautore.jpg");
+    background-image: url("../ressources/image/greek/7.jpg");
 }
 [data-pion="8"] {
-    background-image:url("../ressources/image/cyclope.jpg");
+    background-image: url("../ressources/image/greek/8.jpg");
 }
 [data-pion="9"] {
-    background-image:url("../ressources/image/ares.jpg");
+    background-image: url("../ressources/image/greek/9.jpg");
 }
 [data-pion="10"] {
-    background-image:url("../ressources/image/zeus.jpg");
+    background-image: url("../ressources/image/greek/10.jpg");
 }
 [data-pion="11"] {
-    background-image:url("../ressources/image/eclairzeus.jpg");
+    background-image: url("../ressources/image/greek/11.jpg");
 }
 [data-pion="12"] {
-    background-image:url("../ressources/image/soldat.jpg");
+    background-image: url("../ressources/image/greek/12.jpg");
 }
 
 [data-pion="&0"] {
@@ -187,50 +187,50 @@ html, body {
     filter: grayscale(80%);
 }
 [data-pion="&1"] {
-    background-image: url("../ressources/image/espion.png");
+    background-image: url("../ressources/image/greek/1.png");
     filter: grayscale(80%);
 }
 [data-pion="&2"] {
-    background-image:url("../ressources/image/hermes.jpg");
+    background-image: url("../ressources/image/greek/2.jpg");
     filter: grayscale(80%);
 }
 [data-pion="&3"] {
-    background-image:url("../ressources/image/hephamachintruc.jpg");
+    background-image: url("../ressources/image/greek/3.jpg");
     filter: grayscale(80%);
 }
 [data-pion="&4"] {
-    background-image:url("../ressources/image/casquev2.jpg");
+    background-image: url("../ressources/image/greek/4.jpg");
     filter: grayscale(80%);
 }
 [data-pion="&5"] {
-    background-image:url("../ressources/image/casque.jpg");
+    background-image: url("../ressources/image/greek/5.jpg");
     filter: grayscale(80%);
 }
 [data-pion="&6"] {
-    background-image:url("../ressources/image/centaure.jpg");
+    background-image: url("../ressources/image/greek/6.jpg");
     filter: grayscale(80%);
 }
 [data-pion="&7"] {
-    background-image:url("../ressources/image/minautore.jpg");
+    background-image: url("../ressources/image/greek/7.jpg");
     filter: grayscale(80%);
 }
 [data-pion="&8"] {
-    background-image:url("../ressources/image/cyclope.jpg");
+    background-image: url("../ressources/image/greek/8.jpg");
     filter: grayscale(80%);
 }
 [data-pion="&9"] {
-    background-image:url("../ressources/image/ares.jpg");
+    background-image: url("../ressources/image/greek/9.jpg");
     filter: grayscale(80%);
 }
 [data-pion="&10"] {
-    background-image:url("../ressources/image/zeus.jpg");
+    background-image: url("../ressources/image/greek/10.jpg");
     filter: grayscale(80%);
 }
 [data-pion="&11"] {
-    background-image:url("../ressources/image/eclairzeus.jpg");
+    background-image: url("../ressources/image/greek/11.jpg");
     filter: grayscale(80%);
 }
 [data-pion="&12"] {
-    background-image:url("../ressources/image/soldat.jpg");
+    background-image: url("../ressources/image/greek/12.jpg");
     filter: grayscale(80%);
 }
