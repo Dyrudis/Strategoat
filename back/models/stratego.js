@@ -1,5 +1,3 @@
-const Pion = require("./pion.js");
-
 class Stratego {
     constructor() {
         // Joueur actuel : 0 ou 1
@@ -15,21 +13,6 @@ class Stratego {
         }
 
         // Tableau des pions restants des 2 joueurs :
-        /* this.pionCount = Array(2).fill({
-            "12": 1,
-            "10": 1,
-            "9": 1,
-            "8": 2,
-            "7": 3,
-            "6": 4,
-            "5": 4,
-            "4": 4,
-            "3": 5,
-            "2": 8,
-            "1": 1,
-            "11": 6
-        }); */
-
         this.pionCount = Array(2).fill(0).map(() => {
             return {
                 "12": 1,

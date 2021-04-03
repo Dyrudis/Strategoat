@@ -19,9 +19,25 @@
         username = name;
     });
 
+    // Fonction de tri du tableau des joueurs
+    function tri(a, b) {
+        if (a.status == b.status) {
+            return b.elo - a.elo;
+        }
+        else if (a.status == "Online" || b.status == "Offline") {
+            return -1;
+        }
+        else if (b.status == "Online" || a.status == "Offline") {
+            return 1;
+        }
+    }
+
     // Lorsqu'un joueur se connecte ou se déconnecte
     socket.on("refresh players", users => {
         document.getElementById("playerList").innerHTML = "";
+
+        users.sort(tri);
+        
         users.forEach((player) => {
             if (player.username != username) {
                 // Ajour d'une ligne au tableau

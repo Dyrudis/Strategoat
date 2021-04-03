@@ -146,40 +146,40 @@ html, body {
     background-color: white;
 }
 [data-pion="1"] {
-    background-image: url("../ressources/image/greek/1.png");
+    background-image: url("../ressources/image/default/1.png");
 }
 [data-pion="2"] {
-    background-image: url("../ressources/image/greek/2.jpg");
+    background-image: url("../ressources/image/default/2.png");
 }
 [data-pion="3"] {
-    background-image: url("../ressources/image/greek/3.jpg");
+    background-image: url("../ressources/image/default/3.png");
 }
 [data-pion="4"] {
-    background-image: url("../ressources/image/greek/4.jpg");
+    background-image: url("../ressources/image/default/4.png");
 }
 [data-pion="5"] {
-    background-image: url("../ressources/image/greek/5.jpg");
+    background-image: url("../ressources/image/default/5.png");
 }
 [data-pion="6"] {
-    background-image: url("../ressources/image/greek/6.jpg");
+    background-image: url("../ressources/image/default/6.png");
 }
 [data-pion="7"] {
-    background-image: url("../ressources/image/greek/7.jpg");
+    background-image: url("../ressources/image/default/7.png");
 }
 [data-pion="8"] {
-    background-image: url("../ressources/image/greek/8.jpg");
+    background-image: url("../ressources/image/default/8.png");
 }
 [data-pion="9"] {
-    background-image: url("../ressources/image/greek/9.jpg");
+    background-image: url("../ressources/image/default/9.png");
 }
 [data-pion="10"] {
-    background-image: url("../ressources/image/greek/10.jpg");
+    background-image: url("../ressources/image/default/10.png");
 }
 [data-pion="11"] {
-    background-image: url("../ressources/image/greek/11.jpg");
+    background-image: url("../ressources/image/default/11.png");
 }
 [data-pion="12"] {
-    background-image: url("../ressources/image/greek/12.jpg");
+    background-image: url("../ressources/image/default/12.png");
 }
 
 [data-pion="&0"] {
@@ -187,50 +187,50 @@ html, body {
     filter: grayscale(80%);
 }
 [data-pion="&1"] {
-    background-image: url("../ressources/image/greek/1.png");
+    background-image: url("../ressources/image/default/1.png");
     filter: grayscale(80%);
 }
 [data-pion="&2"] {
-    background-image: url("../ressources/image/greek/2.jpg");
+    background-image: url("../ressources/image/default/2.png");
     filter: grayscale(80%);
 }
 [data-pion="&3"] {
-    background-image: url("../ressources/image/greek/3.jpg");
+    background-image: url("../ressources/image/default/3.png");
     filter: grayscale(80%);
 }
 [data-pion="&4"] {
-    background-image: url("../ressources/image/greek/4.jpg");
+    background-image: url("../ressources/image/default/4.png");
     filter: grayscale(80%);
 }
 [data-pion="&5"] {
-    background-image: url("../ressources/image/greek/5.jpg");
+    background-image: url("../ressources/image/default/5.png");
     filter: grayscale(80%);
 }
 [data-pion="&6"] {
-    background-image: url("../ressources/image/greek/6.jpg");
+    background-image: url("../ressources/image/default/6.png");
     filter: grayscale(80%);
 }
 [data-pion="&7"] {
-    background-image: url("../ressources/image/greek/7.jpg");
+    background-image: url("../ressources/image/default/7.png");
     filter: grayscale(80%);
 }
 [data-pion="&8"] {
-    background-image: url("../ressources/image/greek/8.jpg");
+    background-image: url("../ressources/image/default/8.png");
     filter: grayscale(80%);
 }
 [data-pion="&9"] {
-    background-image: url("../ressources/image/greek/9.jpg");
+    background-image: url("../ressources/image/default/9.png");
     filter: grayscale(80%);
 }
 [data-pion="&10"] {
-    background-image: url("../ressources/image/greek/10.jpg");
+    background-image: url("../ressources/image/default/10.png");
     filter: grayscale(80%);
 }
 [data-pion="&11"] {
-    background-image: url("../ressources/image/greek/11.jpg");
+    background-image: url("../ressources/image/default/11.png");
     filter: grayscale(80%);
 }
 [data-pion="&12"] {
-    background-image: url("../ressources/image/greek/12.jpg");
+    background-image: url("../ressources/image/default/12.png");
     filter: grayscale(80%);
 }
