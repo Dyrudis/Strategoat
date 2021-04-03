@@ -6,6 +6,7 @@
 
     // Nom de l'utilisateur actuel (récupéré depuis le serveur)
     let username;
+    let elo;
 
     // Liste des joueurs qui attendent une réponse à leur invitation
     let invites = [];
@@ -18,6 +19,18 @@
         // On récupére les informations de session envoyées par le serveur
         username = name;
     });
+
+    function civilization(elo) {
+        if (elo >= 1050) {
+            document.getElementById("greek").removeAttribute("disabled");
+            if (elo >= 1100) {
+                document.getElementById("egypt").removeAttribute("disabled");
+                if (elo >= 1250) {
+                    document.getElementById("nordic").removeAttribute("disabled");
+                }
+            }
+        }
+    }
 
     // Fonction de tri du tableau des joueurs
     function tri(a, b) {
@@ -37,7 +50,7 @@
         document.getElementById("playerList").innerHTML = "";
 
         users.sort(tri);
-        
+
         users.forEach((player) => {
             if (player.username != username) {
                 // Ajour d'une ligne au tableau
@@ -75,15 +88,18 @@
                 // Affichage du nom de l'utilisateur sur la page
                 document.getElementById("username").innerHTML = player.username;
                 document.getElementById("elo").innerHTML = "Elo : " + player.elo;
+                elo = player.elo;
                 document.getElementById("gamePlayed").innerHTML = "Parties jouées : " + player.gamePlayed;
                 if (player.gamePlayed == 0) {
-                    document.getElementById("winRate").innerHTML = "Winrate : Pas de donnée";
+                    document.getElementById("winRate").innerHTML = "Winrate : Aucun";
                 }
                 else {
                     document.getElementById("winRate").innerHTML = "Winrate : " + Math.round(player.gameWon / player.gamePlayed * 100) + "%";
                 }
             }
         });
+
+        civilization(elo);
     });
 
     // Lorsque l'utilisateur reçoit une invitation
@@ -128,6 +144,10 @@
         document.querySelector("#found h3").innerHTML = `Adversaire : ${opponentName} !`;
         socket.emit("session variable", "game", "oui");
         setTimeout(() => window.location.href = "/", 3000);
+    });
+
+    document.getElementById("civ").addEventListener("change", e => {
+        socket.emit("civ", username, e.target.value);
     });
 
 })()

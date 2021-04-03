@@ -1,4 +1,3 @@
-const Pion = require("../models/pion");
 const Stratego = require("../models/stratego");
 
 let games = [];
@@ -98,7 +97,7 @@ let self = module.exports = {
     },
 
     delete: (username) => {
-        games.filter(game => game != self.getGame(username));
+        games = games.filter(game => game != self.getGame(username));
     }
 
 }

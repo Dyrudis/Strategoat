@@ -5,7 +5,8 @@ let self = module.exports = {
     newPlayer: (username) => {
         players.push({
             username: username,
-            status: "Offline"
+            status: "Offline",
+            civ: "default"
         });
     },
 
@@ -25,6 +26,11 @@ let self = module.exports = {
     setStatus: (username, status) => {
         if (self.getPlayer(username))
             self.getPlayer(username).status = status;
+    },
+
+    setCiv: (username, civ) => {
+        if (self.getPlayer(username))
+            self.getPlayer(username).civ = civ;
     },
 
     init: (tab) => {

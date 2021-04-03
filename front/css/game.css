@@ -26,13 +26,17 @@ html, body {
 
 #pions {
     height: 100%;
-    width: 370px;
+    width: 500px;
     min-width: 370px;
     padding-right: 30px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.pion {
+    width : 200px;
 }
 
 #self, #opponent {
@@ -52,8 +56,8 @@ html, body {
 
 #self div, #opponent div {
     cursor: pointer;
-    height: 40px;
-    width: 150px;
+    height: 45px;
+    width: 200px;
     border: 1px solid black;
     margin: 3px;
     display: flex;
@@ -62,6 +66,7 @@ html, body {
     background-repeat: no-repeat;
     background-position: center left;
     background-size: 35px;
+    position: relative;
 }
 
 #opponent {
@@ -70,12 +75,17 @@ html, body {
 
 #pions #ready {
     cursor: pointer;
-    height: 35px;
+    height: 40px;
     width: 170px;
     padding: 0;
     border: 1px solid gray;
     border-radius: 5px;
     margin: 20px 17px;
+}
+
+.count{
+    position: absolute;
+    right: 10px;
 }
 
 #stratego {
@@ -97,6 +107,7 @@ html, body {
 #chat {
     height: 100%;
     width: 370px;
+    padding-right: 130px;
     min-width: 370px;
     padding-left: 30px;
     display: flex;
@@ -105,7 +116,7 @@ html, body {
 }
 
 #chat form input {
-    width: 100%;
+    width: 98%;
     height: 25px;
     font-size: 16px;
 }
@@ -120,8 +131,8 @@ html, body {
     -ms-overflow-style: none;
     scrollbar-width: none;
     user-select: text;
-    border : solid grey 1px;
-    box-shadow: 0px 51px 100px -60px grey inset;
+    border : solid rgb(0, 0, 0) 1px;
+    box-shadow: 0px 51px 100px -60px rgb(0, 0, 0) inset;
 }
 
 #messages::-webkit-scrollbar {
@@ -129,108 +140,46 @@ html, body {
 }
 
 #stratego td {
-    -webkit-text-stroke: 0; 
+    -webkit-text-stroke: 0;
     color: transparent;
     font-size: 2.5em;
     font-weight: bold;
 }
 
 [data-pion="null"] {
-    background-color: lightgray;
+    background-color: #4da39f !important;
     border: none;
 }
+
 [data-pion="-1"] {
-    background-color: darkslategrey;
-}
-[data-pion="0"] {
-    background-color: white;
-}
-[data-pion="1"] {
-    background-image: url("../ressources/image/default/1.png");
-}
-[data-pion="2"] {
-    background-image: url("../ressources/image/default/2.png");
-}
-[data-pion="3"] {
-    background-image: url("../ressources/image/default/3.png");
-}
-[data-pion="4"] {
-    background-image: url("../ressources/image/default/4.png");
-}
-[data-pion="5"] {
-    background-image: url("../ressources/image/default/5.png");
-}
-[data-pion="6"] {
-    background-image: url("../ressources/image/default/6.png");
-}
-[data-pion="7"] {
-    background-image: url("../ressources/image/default/7.png");
-}
-[data-pion="8"] {
-    background-image: url("../ressources/image/default/8.png");
-}
-[data-pion="9"] {
-    background-image: url("../ressources/image/default/9.png");
-}
-[data-pion="10"] {
-    background-image: url("../ressources/image/default/10.png");
-}
-[data-pion="11"] {
-    background-image: url("../ressources/image/default/11.png");
-}
-[data-pion="12"] {
-    background-image: url("../ressources/image/default/12.png");
+    background-color: #E53344 !important;
 }
 
-[data-pion="&0"] {
-    background-color: white;
-    filter: grayscale(80%);
+[data-pion="0"] {
+    background-color: grey !important;
 }
-[data-pion="&1"] {
-    background-image: url("../ressources/image/default/1.png");
-    filter: grayscale(80%);
+
+
+body {
+    background: linear-gradient(-45deg, #222f3e, #353b48);
+    background-size: 1000% 1000%;
+    animation: gradient 10s ease infinite;
+    color: black;
+    font-weight: bold;
 }
-[data-pion="&2"] {
-    background-image: url("../ressources/image/default/2.png");
-    filter: grayscale(80%);
+
+#title{
+    color: white;
 }
-[data-pion="&3"] {
-    background-image: url("../ressources/image/default/3.png");
-    filter: grayscale(80%);
-}
-[data-pion="&4"] {
-    background-image: url("../ressources/image/default/4.png");
-    filter: grayscale(80%);
-}
-[data-pion="&5"] {
-    background-image: url("../ressources/image/default/5.png");
-    filter: grayscale(80%);
-}
-[data-pion="&6"] {
-    background-image: url("../ressources/image/default/6.png");
-    filter: grayscale(80%);
-}
-[data-pion="&7"] {
-    background-image: url("../ressources/image/default/7.png");
-    filter: grayscale(80%);
-}
-[data-pion="&8"] {
-    background-image: url("../ressources/image/default/8.png");
-    filter: grayscale(80%);
-}
-[data-pion="&9"] {
-    background-image: url("../ressources/image/default/9.png");
-    filter: grayscale(80%);
-}
-[data-pion="&10"] {
-    background-image: url("../ressources/image/default/10.png");
-    filter: grayscale(80%);
-}
-[data-pion="&11"] {
-    background-image: url("../ressources/image/default/11.png");
-    filter: grayscale(80%);
-}
-[data-pion="&12"] {
-    background-image: url("../ressources/image/default/12.png");
-    filter: grayscale(80%);
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }

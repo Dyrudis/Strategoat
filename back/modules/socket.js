@@ -67,7 +67,12 @@ module.exports = function (io, games, database, connections) {
 
         // Début de la partie
         socket.on("start game", (player1, player2) => {
-            games.createGame(player1, player2);
+            games.createGame(player1, player2, connections.getPlayer(player1).civ, connections.getPlayer(player2).civ);
+        });
+
+        // Changement de civilisation
+        socket.on("civ", (username, civ) => {
+            connections.getPlayer(username).civ = civ;
         });
 
         // Un joueur arrive sur la page de jeu
@@ -79,6 +84,9 @@ module.exports = function (io, games, database, connections) {
             // Attribution du bon socket id
             games.getPlayer(username).id = socket.id;
 
+            if (games.getGame(username)) {
+                socket.emit("civ", connections.getPlayer(username).civ, connections.getPlayer(games.getOpponent(username).username).civ)
+            }
             // Si la partie a démarée, on renvoie le tableau
             if (games.getGame(username).started) {
                 socket.emit("reload tab", games.getTab(username), games.getPions(username));
@@ -95,8 +103,8 @@ module.exports = function (io, games, database, connections) {
             let name = socket.handshake.session.username;
 
             // Envoie du message aux deux joueurs de la partie
-            socket.emit("message", message, "black", name);
-            socket.to(games.getOpponent(name).id).emit("message", message, "black", name);
+            socket.emit("message", message, "white", name);
+            socket.to(games.getOpponent(name).id).emit("message", message, "white", name);
         });
 
         // Un joueur est prêt
@@ -259,6 +267,8 @@ module.exports = function (io, games, database, connections) {
                 // Notification par message
                 socket.emit("message", "Partie terminé, " + winner.username + " remporte la victoire !", "green");
                 socket.to(games.getOpponent(username).id).emit("message", "Partie terminé, " + winner.username + " remporte la victoire !", "green");
+
+                games.delete(username);
             }
             // Le tour s'est bien déroulé
             else {
