@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Strategoat</title>
+    <title>Strategoat - Login</title>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/button.css">
 </head>
 
 <body>
@@ -18,9 +19,13 @@
                     <div class="form-container sign-in-container">
                         <form action="signin" method="POST">
                             <h1>Connexion à un compte</h1>
-                            <input type="text" name="username" placeholder="Username" required>
-                            <input type="password" name="password" placeholder="Password" required>
-                            <button>Envoyer</button>
+                            <input type="text" name="username" placeholder="Nom d'utilisateur" required>
+                            <input type="password" name="password" placeholder="Mot de Passe" required>
+
+                            <div class="button3d" onClick="this.parentNode.submit();">
+                                <div>Envoyer</div>
+                                <div>Envoyer</div>
+                            </div>
                         </form>
                     </div>
                     <button id="flip-card-btn-turn-to-back">Sign Up</button>
@@ -30,10 +35,14 @@
                         <div class="form-container sign-up-container">
                             <form action="signup" method="POST">
                                 <h1>Créer un compte</h1>
-                                <input type="email" name="email" placeholder="Email" required >
+                                <input type="email" name="email" placeholder="Email" required>
                                 <input type="text" name="username" placeholder="Nom d'utilisateur" required>
                                 <input type="password" name="password" placeholder="Mot de Passe" required>
-                                <button>Envoyer</button>
+
+                                <div class="button3d" onClick="this.parentNode.submit();">
+                                    <div>Envoyer</div>
+                                    <div>Envoyer</div>
+                                </div>
                             </form>
                         </div>
                     </div>

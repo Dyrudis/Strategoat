@@ -4,25 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strategoat</title>
+    <title>Strategoat - Accueil</title>
     <script src="socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/button.css">
 </head>
 
 <body>
     <h1>Strategoat</h1>
     <div id="info">
-        <p id="username"></p>
         <form action="logout" method="POST" id="logout">
-            <input type="submit" value="Se déconnecter" id="disconnect">
+            <div class="button3d" onClick="this.parentNode.submit();">
+                <div>Se déconnecter</div>
+                <div id="username"></div>
+            </div>
         </form>
         <select name="civ" id="civ">
             <option value="default" disabled selected>Civilisations</option>
-            <option value="default" id ="default" >Par défaut</option>
-            <option value="greek" id ="greek" disabled>Grecque</option>
-            <option value="egypt" id ="egypt" disabled>Egypte</option>
-            <option value="nordic" id ="nordic" disabled>Nordique</option>
-            <option value="world" id ="world" disabled>Monde</option>
+            <option value="default" id="default">Par défaut</option>
+            <option value="greek" id="greek" disabled>Grecque</option>
+            <option value="egypt" id="egypt" disabled>Egypte</option>
+            <option value="nordic" id="nordic" disabled>Nordique</option>
+            <option value="world" id="world" disabled>Monde</option>
         </select>
         <p id="elo"></p>
         <p id="gamePlayed"></p>
