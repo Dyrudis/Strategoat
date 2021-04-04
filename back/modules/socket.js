@@ -265,8 +265,10 @@ module.exports = function (io, games, database, connections) {
                 // Notification par message
                 socket.emit("message", "Partie terminé, " + winner.username + " remporte la victoire !", "green");
                 socket.to(games.getOpponent(username).id).emit("message", "Partie terminé, " + winner.username + " remporte la victoire !", "green");
+                socket.emit("message", "Redirection vers l'accueil dans 5 secondes.", "gray");
+                socket.to(games.getOpponent(username).id).emit("message", "Redirection vers l'accueil dans 5 secondes.", "gray");
 
-                games.delete(username);
+                setTimeout(function () { games.delete(username); }, 5000);
             }
             // Le tour s'est bien déroulé
             else {

@@ -344,6 +344,8 @@ socket.on("end", (tab, pionCount) => {
     displayPionCount(pionCount);
 
     socket.emit("session variable", "game", undefined);
+
+    setTimeout(function () { document.location.reload(); }, 5000);
 });
 
 /*---------------------------*\
