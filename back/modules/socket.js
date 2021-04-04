@@ -222,8 +222,6 @@ module.exports = function (io, games, database, connections) {
             else if (result.winner != undefined) {
                 let winner = games.getGame(username).players[result.winner];
 
-                console.log(winner.username + " gagne !");
-
                 games.getGame(username).finished = true;
 
                 // Calcul du nouvel elo :

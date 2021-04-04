@@ -5,6 +5,10 @@ html, body {
     font-size: 18px;
 }
 
+*:focus {
+    outline: none;
+}
+
 #title {
     height: 120px;
     margin: 0;
@@ -117,7 +121,7 @@ html, body {
 
 #chat form input {
     width: 98%;
-    height: 25px;
+    height: 30px;
     font-size: 16px;
 }
 
@@ -161,7 +165,7 @@ html, body {
 
 
 body {
-    background: linear-gradient(-45deg, #222f3e, #353b48);
+    background: linear-gradient(-45deg, #2d2f39, #22232b);
     background-size: 1000% 1000%;
     animation: gradient 10s ease infinite;
     color: black;

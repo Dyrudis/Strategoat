@@ -23,8 +23,6 @@ let self = module.exports = {
             started: false,
             finished: false
         });
-
-        console.log(`Nouvelle partie : ${player1} vs ${player2}`);
     },
 
     // Fonction qui renvoie la partie du joueur ayant le nom username

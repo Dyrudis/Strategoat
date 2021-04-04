@@ -14,7 +14,8 @@ h1 {
     right: 10px;
     width: 200px;
     height: 275px;
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: rgba(255, 255, 255, 1);
+    color: black;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -28,18 +29,80 @@ h1 {
     margin: 0;
 }
 
+#username {
+    font-size: 1.5em;
+}
+
+#logout {
+    margin: 5px;
+    padding: 5px;
+    overflow: visible;
+}
+
 .button3d {
     font-weight: bold;
     font-size: 1.5em;
     width: 150px !important;
+    margin-bottom: 0;
 }
 
-#civ {
-    height: 30px;
+.button3d div {
+    border: none !important;
 }
 
-#disconnect {
-    height: 30px;
+.formfield-select {
+	position: relative;
+    width: 120px;
+    text-align: center;
+}
+
+.formfield-select--container {
+	position: relative; 
+	background-color: #fff;
+	border: black 1px solid;
+	overflow: hidden;
+}
+
+.formfield-select--container select {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	width: 110%;
+	height: auto;
+	border: 0; 
+	margin: 0;
+	padding: .75em;
+	border-radius: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.formfield-select--container::after {
+	content: '';
+	position: absolute;
+	top: 50%; 
+	margin-top: -3px;
+	right: .75em;  
+	display: block; 
+	width: 0; height: 0;
+	border-color: transparent;
+	border-top-color: #444; 
+	border-width: 6px;
+	border-style: solid;
+	pointer-events: none;
+}
+
+option {
+    padding: 10px;
+    background-color: white;
+}
+
+option:disabled {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+#civ:focus {
+    outline: none;
 }
 
 table {
@@ -51,6 +114,11 @@ table {
 thead {
     font-weight: bold;
     background-color: rgba(0, 0, 0, 0.25);
+}
+
+tbody {
+    background-color: white;
+    color: black;
 }
 
 td {
@@ -68,8 +136,7 @@ td {
 }
 
 body {
-    background: linear-gradient(-45deg, #3e23d5, #236ad5);
-    background: linear-gradient(-45deg, #222f3e, #353b48);
+    background: linear-gradient(-45deg, #2d2f39, #22232b);
     background-size: 1000% 1000%;
     animation: gradient 10s ease infinite;
     color: white;

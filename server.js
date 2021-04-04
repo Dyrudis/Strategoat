@@ -133,5 +133,5 @@ connection.query("SELECT username FROM accounts", (err, result) => {
 const port = process.env.PORT || 4200;
 
 http.listen(port, () => {
-    console.log(`Serveur lancé sur le port ${port}`);
+    console.log(`Serveur lancé sur : http://localhost:${port}`);
 });

@@ -19,14 +19,23 @@
                 <div id="username"></div>
             </div>
         </form>
-        <select name="civ" id="civ">
-            <option value="default" disabled selected>Civilisations</option>
-            <option value="default" id="default">Par défaut</option>
-            <option value="greek" id="greek" disabled>Grecque</option>
-            <option value="egypt" id="egypt" disabled>Egypte</option>
-            <option value="nordic" id="nordic" disabled>Nordique</option>
-            <option value="world" id="world" disabled>Monde</option>
-        </select>
+        <div class="formfield-select">
+
+            <label for="civ">Civilisation</label>
+
+            <div class="formfield-select--container">
+
+
+                <select name="civ" id="civ">
+                    <option value="default" id="default" selected>Par défaut</option>
+                    <option value="greek" id="greek" disabled>Grecque (1100)</option>
+                    <option value="egypt" id="egypt" disabled>Egypte (1200)</option>
+                    <option value="nordic" id="nordic" disabled>Nordique (1500)</option>
+                </select>
+
+            </div>
+
+        </div>
         <p id="elo"></p>
         <p id="gamePlayed"></p>
         <p id="winRate"></p>
@@ -35,7 +44,7 @@
         <thead>
             <tr>
                 <td>Nom</td>
-                <td>Etat</td>
+                <td>État</td>
                 <td>Elo</td>
                 <td>Parties jouées</td>
                 <td>Parties gagnées</td>

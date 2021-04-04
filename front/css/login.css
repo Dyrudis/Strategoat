@@ -9,8 +9,7 @@ html * {
 }
 
 body {
-  background: linear-gradient(-45deg, #3e23d5, #236ad5);
-  background: linear-gradient(-45deg, #222f3e, #353b48);
+  background: linear-gradient(-45deg, #2d2f39, #22232b);
   background-size: 1000% 1000%;
   animation: gradient 10s ease infinite;
   color: white;
@@ -80,6 +79,8 @@ form {
 	padding: 40px 50px;
 	height: 100%;
   text-align: center;
+  background-color: white;
+  color: black;
 }
 
 form h1 {
@@ -177,9 +178,9 @@ input:focus {
   -ms-backface-visibility: hidden;
   backface-visibility: hidden;
   z-index: 2;
-  -webkit-box-shadow: 0px 0px 32px 2px rgba(0,0,0,0.5);
-  -moz-box-shadow: 0px 0px 32px 2px rgba(0,0,0,0.5);
-  box-shadow: 0px 0px 32px 2px rgba(0,0,0,0.5);
+  -webkit-box-shadow: 0px 0px 32px 2px rgba(0,0,0,0.2);
+  -moz-box-shadow: 0px 0px 32px 2px rgba(0,0,0,0.2);
+  box-shadow: 0px 0px 32px 2px rgba(0,0,0,0.2);
 }
 #flip-card .flip-card-front {
     background: transparent;
