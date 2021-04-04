@@ -8,6 +8,23 @@ h1 {
 	font-size: 50px;
 }
 
+button {
+    border-radius: 2px;
+    border: black 1px solid;
+    background-color: white;
+    transition: all 0.3s ease;
+    padding: 3px 6px;
+}
+
+button:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+}
+
+button:focus {
+    outline: none;
+}
+
 #info {
     position: fixed;
     top: 10px;
@@ -51,6 +68,7 @@ h1 {
 }
 
 .formfield-select {
+    margin-top: -20px;
 	position: relative;
     width: 120px;
     text-align: center;
@@ -125,14 +143,38 @@ td {
     border: 1px solid black;
     padding: 5px;
     width: 100px;
+    height: 25px;
 }
 
-#cancel {
-    display: none;
+#invitations {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 300px;
+}
+
+.invitation {
+    width: auto;
+    background-color: white;
+    border-radius: 10px;
+    color: black;
+    padding: 15px 0;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.invitation p {
+    margin: 0;
+}
+
+.invitation button {
+    margin: 15px 5px 0 5px;
 }
 
 #found {
     display: none;
+    text-align: center;
+    margin-bottom: 45px;
 }
 
 body {

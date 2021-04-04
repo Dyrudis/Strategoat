@@ -57,17 +57,27 @@
                 let tr = document.createElement("tr");
 
                 let td = document.createElement("td");
-                td.innerHTML = player.username;
-                tr.appendChild(td);
-
-                td = document.createElement("td");
-                button = document.createElement("button");
-                button.onclick = () => { socket.emit("send invite", player.username) };
+                let button = document.createElement("button");
                 button.innerHTML = player.status;
-                if (player.status != "Online") {
-                    button.setAttribute("disabled", true);
+                if (player.status == "Online") {
+                    button.style.backgroundColor = "#2E7D32";
+                    button.onclick = () => { socket.emit("send invite", player.username) };
+                    button.style.cursor = "pointer";
                 }
+                else if (player.status == "In game") {
+                    button.style.backgroundColor = "#F9A825";
+                }
+                else if (player.status == "Offline") {
+                    button.style.backgroundColor = "#C62828";
+                }
+                button.style.width = "65px";
+                button.style.color = "white";
+                button.style.border = "none";
                 td.appendChild(button);
+                tr.appendChild(td);
+                
+                td = document.createElement("td");
+                td.innerHTML = player.username;
                 tr.appendChild(td);
 
                 td = document.createElement("td")
@@ -111,10 +121,12 @@
 
             // Création d'un élément de la page correspondant à une invitation
             let invitation = document.createElement("div");
-            invitation.innerHTML = `<p>${player} veut jouer contre vous !</p>`;
+            invitation.setAttribute("class", "invitation");
+            invitation.innerHTML = `<p>${player} vous a envoyé une invitation</p>`;
 
             // Bouton pour accepter l'invitation
             let accept = document.createElement("button");
+            accept.setAttribute("class", "accept");
             accept.innerHTML = "Accepter";
             accept.addEventListener("click", () => {
                 socket.emit("start game", player, username);
@@ -125,6 +137,7 @@
 
             // Bouton pour décliner l'invitation
             let decline = document.createElement("button");
+            decline.setAttribute("class", "decline");
             decline.innerHTML = "Refuser";
             decline.addEventListener("click", () => {
                 socket.emit("decline", player, username);
@@ -133,8 +146,7 @@
             });
             invitation.appendChild(decline);
 
-            invitation.style.backgroundColor = "gray";
-            document.body.appendChild(invitation);
+            document.getElementById("invitations").appendChild(invitation);
         }
     });
 
