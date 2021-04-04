@@ -338,6 +338,17 @@ socket.on("reload tab", (tab, pionCount) => {
     displayPionCount(pionCount);
 });
 
+socket.on("vs", (civ1, id1, civ2, id2) => {
+    let message = "<span style='color:#3344AA'>" + namesList[civ1][id1] + "</span> VS <span style='color:#E53344'>" + namesList[civ2][id2] + "</span>";
+    let date = new Date();
+    let li = document.createElement("li");
+    li.innerHTML = "<span style='color:grey'>[" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "]</span> " + message;
+    li.style.color = "orange";
+    let messages = document.getElementById("messages");
+    messages.appendChild(li);
+    messages.scrollTop = messages.scrollHeight;
+});
+
 // Fin de la partie
 socket.on("end", (tab, pionCount) => {
     displayTab(tab);
@@ -426,10 +437,12 @@ function drop(e) {
     displayPionCount(pionCount);
 
     if (isPlacementFinished()) {
-        document.getElementById("ready").disabled = false;
+        if (document.getElementById("ready"))
+            document.getElementById("ready").disabled = false;
     }
     else {
-        document.getElementById("ready").disabled = true;
+        if (document.getElementById("ready"))
+            document.getElementById("ready").disabled = true;
     }
 }
 

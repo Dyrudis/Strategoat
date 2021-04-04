@@ -45,6 +45,10 @@ class Stratego {
     }
 
     play(x1, y1, x2, y2) {
+        x1 = parseInt(x1);
+        x2 = parseInt(x2);
+        y1 = parseInt(y1);
+        y2 = parseInt(y2);
         //section autorisation deplacement
 
         //verification appartenance du pion
@@ -157,8 +161,15 @@ class Stratego {
             };
         }
 
+        let fight = false;
+        let pions = [];
         //Si combat
-        if (this.tab[x2][y2].player == (this.currentPlayer + 1) % 2) this.escarmouche(x1, y1, x2, y2);
+        if (this.tab[x2][y2].player == (this.currentPlayer + 1) % 2) {
+            fight = true;
+            pions.push(this.tab[x1][y1].id);
+            pions.push(this.tab[x2][y2].id);
+            this.escarmouche(x1, y1, x2, y2);
+        }
         //Sinon deplacement
         else {
             this.tab[x2][y2] = this.tab[x1][y1];
@@ -177,7 +188,9 @@ class Stratego {
         this.currentPlayer = (this.currentPlayer + 1) % 2;
 
         return {
-            success: true
+            success: true,
+            fight: fight,
+            pions: pions
         };
     }
 

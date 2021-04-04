@@ -152,6 +152,8 @@ module.exports = function (io, games, database, connections) {
             // On indique au serveur que le jouer est prêt à démarrer la partie
             games.getPlayer(username).ready = true;
 
+            socket.emit("ready");
+            
             // Si les deux joueurs sont prêt, la partie peut commencer
             if (games.getOpponent(username).ready) {
 
@@ -175,7 +177,6 @@ module.exports = function (io, games, database, connections) {
 
             // Si l'adversaire n'est pas encore prêt
             else {
-                socket.emit("ready");
                 socket.to(games.getOpponent(username).id).emit("message", "Votre adversaire est prêt.", "green");
             }
         });
@@ -268,10 +269,16 @@ module.exports = function (io, games, database, connections) {
                 socket.emit("message", "Redirection vers l'accueil dans 5 secondes.", "gray");
                 socket.to(games.getOpponent(username).id).emit("message", "Redirection vers l'accueil dans 5 secondes.", "gray");
 
-                setTimeout(function () { games.delete(username); }, 5000);
+                setTimeout(function () { games.delete(username); }, 6000);
             }
             // Le tour s'est bien déroulé
             else {
+                // Il y a eu un combat
+                if (result.fight) {
+                    socket.emit("vs", connections.getPlayer(username).civ, result.pions[0], connections.getPlayer(games.getOpponent(username).username).civ, result.pions[1], "orange");
+                    socket.to(games.getOpponent(username).id).emit("vs", connections.getPlayer(games.getOpponent(username).username).civ, result.pions[1], connections.getPlayer(username).civ, result.pions[0], "orange");
+                }
+
                 socket.emit("update tab", games.getTab(username), games.getPions(username));
                 socket.to(games.getOpponent(username).id).emit("update tab", games.getTab(games.getOpponent(username).username), games.getPions(games.getOpponent(username).username));
 
