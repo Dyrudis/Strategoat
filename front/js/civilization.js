@@ -42,17 +42,17 @@ const namesList = {
         12: "Corne d'odin"
     },
     "egypt": {
-        1: "Espion",
-        2: "Éclaireur",
-        3: "Démineur",
-        4: "Sergeant",
-        5: "Lieutenant",
-        6: "Capitaine",
-        7: "Commandant",
-        8: "Colonel",
-        9: "Général",
-        10: "Maréchal",
-        11: "Bombe",
-        12: "Drapeau"
+        1: "Cassio",
+        2: "Hathor",
+        3: "Khnoum",
+        4: "Thot",
+        5: "Sekhmet",
+        6: "Horus",
+        7: "Osiris",
+        8: "Neith",
+        9: "Taouret",
+        10: "Anubis",
+        11: "Momie",
+        12: "Scarabée doré"
     }
 }

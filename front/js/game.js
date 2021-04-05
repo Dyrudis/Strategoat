@@ -209,9 +209,6 @@ document.getElementById("chatForm").addEventListener("submit", e => {
     if (message.value[0] == "/") {
         let command = message.value.substring(1);
         switch (command) {
-            case "ff":
-                sendToChat("Vous avez abandonné la partie.");
-                break;
             case "autofill":
                 autoFill();
                 break;
