@@ -21,12 +21,12 @@
     });
 
     function civilization(elo) {
-        if (elo >= 1050) {
+        if (elo >= 1100) {
             document.getElementById("greek").removeAttribute("disabled");
-            if (elo >= 1100) {
-                document.getElementById("egypt").removeAttribute("disabled");
-                if (elo >= 1250) {
-                    document.getElementById("nordic").removeAttribute("disabled");
+            if (elo >= 1200) {
+                document.getElementById("nordic").removeAttribute("disabled");
+                if (elo >= 1400) {
+                    document.getElementById("egypt").removeAttribute("disabled");
                 }
             }
         }

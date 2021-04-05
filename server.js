@@ -27,7 +27,7 @@ const connection = mysql.createConnection({
     database: "heroku_db2b00592774280" */
 });
 
-app.use('/favicon.ico', express.static(`${__dirname}/front/ressources/image/default/1.png`));
+app.use('/favicon.ico', express.static(`${__dirname}/front/ressources/image/icon.png`));
 
 app.use(session);
 app.use(bodyParser.urlencoded({ extended: true }));

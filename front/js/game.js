@@ -258,10 +258,10 @@ socket.on("civ", (ownCiv, opponentCiv) => {
 
     let css = "";
     for (let i = 1; i <= 12; i++) {
-        css += `[data-pion="${i}"] {background-image:url("../ressources/image/${ownCiv}/${i}.png"); background-color:#3344AA;}`
+        css += `[data-pion="${i}"] {background-image:url("../ressources/image/${ownCiv}/${i}.png"); background-color:#2B3A98;}`
     }
     for (let i = 1; i <= 12; i++) {
-        css += `[data-pion="&${i}"] {background-image:url("../ressources/image/${opponentCiv}/${i}.png"); background-color:#E53344;}`
+        css += `[data-pion="&${i}"] {background-image:url("../ressources/image/${opponentCiv}/${i}.png"); background-color:#BE3441;}`
     }
 
     style.appendChild(document.createTextNode(css));
@@ -339,7 +339,7 @@ socket.on("reload tab", (tab, pionCount) => {
 });
 
 socket.on("vs", (civ1, id1, civ2, id2) => {
-    let message = "<span style='color:#3344AA'>" + namesList[civ1][id1] + "</span> VS <span style='color:#E53344'>" + namesList[civ2][id2] + "</span>";
+    let message = "<span style='color:#2B3A98'>" + namesList[civ1][id1] + "</span> VS <span style='color:#BE3441'>" + namesList[civ2][id2] + "</span>";
     let date = new Date();
     let li = document.createElement("li");
     li.innerHTML = "<span style='color:grey'>[" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "]</span> " + message;
