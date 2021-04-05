@@ -19,12 +19,6 @@ const connection = mysql.createConnection({
     user: "root",
     password: "",
     database: "strategoat"
-
-    // Connexion à la base de donnée Heroku :
-    /* host: "eu-cdbr-west-03.cleardb.net",
-    user: "b8669c0ae18ee6",
-    password: "85dafeff",
-    database: "heroku_db2b00592774280" */
 });
 
 app.use('/favicon.ico', express.static(`${__dirname}/front/ressources/image/icon.png`));
