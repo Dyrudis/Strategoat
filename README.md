@@ -1,4 +1,7 @@
 # Strategoat
+
+Vidéo de présentation : https://www.youtube.com/watch?v=GHUPXt1-nO0
+
 Strategoat est un site de jeu de Stratego en ligne développé par BOUHELASSA Samy, GROUX Louis, LEHU Vianney, SINGEOT-SOUSA Tanguy, ZHOU Lucas.
 
 ### Installation du projet :
@@ -53,6 +56,6 @@ Hyouz | Hyouz
 Dyson | Dyson
 Valentin_UwU | Valentin_UwU
 
-3. Cliquer sur le bouton "Online" vert qui apparait à gauche du pseudo de l'autre joueur
+3. Envoyer une invitation en cliquant sur le bouton "Online" vert qui apparait à gauche du pseudo de l'autre joueur
 4. Accepter l'invitation du côté de l'autre joueur
 5. S'amuser
