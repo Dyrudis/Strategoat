@@ -1,9 +1,9 @@
 # Strategoat
-Strategoat est un site de jeu de Stratego en ligne !
+Strategoat est un site de jeu de Stratego en ligne développé par BOUHELASSA Samy, GROUX Louis, LEHU Vianney, SINGEOT-SOUSA Tanguy, ZHOU Lucas.
 
 ### Étapes pour installer le projet :
 
-1. Création du tableau dans la base de données SQL :
+1. Créer un tableau dans la base de données SQL :
 ```SQL
 -- MySQL dump 10.13  Distrib 8.0.16, for Win64 (x86_64)
 --
@@ -35,4 +35,4 @@ const connection = mysql.createConnection({
     database: "strategoat"
 });
 ```
-3. Lancer le serveur, à l'aide des commandes `node server.js` ou `npm start`
+3. Lancer le serveur à l'aide des commandes `node server.js` ou `npm start`
