@@ -216,7 +216,7 @@ document.getElementById("chatForm").addEventListener("submit", e => {
                 toggleNumber();
                 break;
             case "help":
-                sendToChat("Liste des commandes :<br/>/autofill : remplissage automatique du tableau<br/>/ff : abandon<br/>/number : affiche/enleve les valeurs des pions<br/>/help : demander de l'aide");
+                sendToChat("Liste des commandes :<br/>/autofill : remplissage automatique du tableau<br/>/number : affiche/enleve les valeurs des pions<br/>/help : demander de l'aide");
                 break;
             default:
                 sendToChat("Commande inconnue.");
