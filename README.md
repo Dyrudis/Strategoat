@@ -6,7 +6,10 @@ Strategoat est un site de jeu de Stratego en ligne développé par BOUHELASSA Sa
 
 ### Installation du projet :
 
-1. Créer un tableau dans la base de données SQL :
+1. Télécharger le projet
+
+
+2. Créer un tableau dans la base de données SQL :
 ```SQL
 DROP TABLE IF EXISTS `accounts`;
 CREATE TABLE `accounts` (
@@ -31,7 +34,7 @@ INSERT INTO `accounts` VALUES
 (7,'admin','8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918','admin@admin.admin',0,0,9999);
 UNLOCK TABLES;
 ```
-2. Renseigner les informations de la base de données dans `server.js` (déjà configuré pour une base de données locale) :
+3. Renseigner les informations de la base de données dans `server.js` (déjà configuré pour une base de données locale) :
 ```js
 const connection = mysql.createConnection({
     host: "localhost",
@@ -40,7 +43,7 @@ const connection = mysql.createConnection({
     database: "strategoat"
 });
 ```
-3. Lancer le serveur à l'aide des commandes `node server.js` ou `npm start`
+4. Lancer le serveur à l'aide des commandes `node server.js` ou `npm start`
 
 ### Démarrer une partie :
 
