@@ -5,16 +5,6 @@ Strategoat est un site de jeu de Stratego en ligne développé par BOUHELASSA Sa
 
 1. Créer un tableau dans la base de données SQL :
 ```SQL
--- MySQL dump 10.13  Distrib 8.0.23, for Win64 (x86_64)
---
--- Host: localhost    Database: strategoat
--- ------------------------------------------------------
--- Server version	5.7.31
-
---
--- Table structure for table `accounts`
---
-
 DROP TABLE IF EXISTS `accounts`;
 CREATE TABLE `accounts` (
   `idaccounts` int(11) NOT NULL AUTO_INCREMENT,
@@ -25,7 +15,7 @@ CREATE TABLE `accounts` (
   `gameWon` int(11) DEFAULT '0',
   `elo` int(11) DEFAULT '1000',
   PRIMARY KEY (`idaccounts`)
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
 LOCK TABLES `accounts` WRITE;
 INSERT INTO `accounts` VALUES
