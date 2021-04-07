@@ -60,6 +60,6 @@ Hyouz | Hyouz
 Dyson | Dyson
 Valentin_UwU | Valentin_UwU
 
-3. Envoyer une invitation en cliquant sur le bouton "Online" vert qui apparait à gauche du pseudo de l'autre joueur
-4. Accepter l'invitation du côté de l'autre joueur
-5. S'amuser
+2. Envoyer une invitation en cliquant sur le bouton "Online" vert qui apparait à gauche du pseudo de l'autre joueur
+3. Accepter l'invitation du côté de l'autre joueur
+4. S'amuser
